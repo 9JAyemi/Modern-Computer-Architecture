@@ -30,3 +30,51 @@ void test_linear_basic2(void)
 }
 
 // Add more test cases as needed
+void test_linear_with_zero_bias(void)
+{
+    float input[] = {1.0, 2.0, 3.0};
+    float *weights[] = {(float[]){1.0, 2.0, 3.0}, (float[]){4.0, 5.0, 6.0}};
+    float biases[] = {0.0, 0.0};
+    float *output = linear(input, weights, biases, 3, 2);
+    TEST_ASSERT_EQUAL_FLOAT(14.0, output[0]);
+    TEST_ASSERT_EQUAL_FLOAT(32.0, output[1]);
+
+    // Cleanup
+    free(output);
+}
+void test_linear_with_negative_weights(void)
+{
+    float input[] = {1.0, 2.0, 3.0};
+    float *weights[] = {(float[]){-1.0, -2.0, -3.0}, (float[]){-4.0, -5.0, -6.0}};
+    float biases[] = {0.1, 0.2};
+    float *output = linear(input, weights, biases, 3, 2);
+    TEST_ASSERT_EQUAL_FLOAT(-13.9, output[0]);
+    TEST_ASSERT_EQUAL_FLOAT(-31.8, output[1]);
+
+    // Cleanup
+    free(output);
+}
+void test_linear_with_negative_bias(void)
+{
+    float input[] = {1.0, 2.0, 3.0};
+    float *weights[] = {(float[]){1.0, 2.0, 3.0}, (float[]){4.0, 5.0, 6.0}};
+    float biases[] = {-0.1, -0.2};
+    float *output = linear(input, weights, biases, 3, 2);
+    TEST_ASSERT_EQUAL_FLOAT(14.0 - 0.1, output[0]);
+    TEST_ASSERT_EQUAL_FLOAT(32.0 - 0.2, output[1]);
+
+    // Cleanup
+    free(output);
+}
+void test_linear_with_all_zero_weights_and_bias(void)
+{
+    float input[] = {1.0, 2.0, 3.0};
+    float *weights[] = {(float[]){0.0, 0.0, 0.0}, (float[]){0.0, 0.0, 0.0}};
+    float biases[] = {0.0, 0.0};
+    float *output = linear(input, weights, biases, 3, 2);
+    TEST_ASSERT_EQUAL_FLOAT(0.0, output[0]);
+    TEST_ASSERT_EQUAL_FLOAT(0.0, output[1]);
+
+    // Cleanup
+    free(output);
+}

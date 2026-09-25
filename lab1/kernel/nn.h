@@ -7,7 +7,7 @@
 #include "conv.h"
 
 float *flatten(float ***input, int inputSize, int depth);
-int forwardPass(float ***image, int numChannels, float ****conv1WeightsData, float **fc1WeightsData, float **fc2WeightsData, float *conv1BiasData, float *fc1BiasData, float *fc2BiasData);
+int forwardPass(float ***image, int numChannels, int inputSize, int numFilters, int kernelSize, int fc1OutputSize, int fc2OutputSize, float ****conv1WeightsData, float **fc1WeightsData, float **fc2WeightsData, float *conv1BiasData, float *fc1BiasData, float *fc2BiasData);
 int predict(float *probabilityVector, int numClasses);
 
 #endif // NN_H

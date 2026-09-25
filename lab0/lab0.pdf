@@ -1,0 +1,118 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R /F2 5 0 R >> >> /Contents 6 0 R >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+6 0 obj
+<< /Length 7153 >>
+stream
+q 0.000 0.000 0.000 rg BT /F2 16.0 Tf 45.0 752.0 Td (ECE 5755 Lab 0: Sorting and Top-Down Analysis) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.5 Tf 45.0 736.0 Td (5,000-element input on Intel Xeon Silver 4514Y \(Sapphire Rapids\)) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F2 9.0 Tf 45.0 712.0 Td (Implementation.) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.5 Tf 45.0 699.0 Td (I implemented an in-place, recursive top-down mergesort in mysort.c. Each recursive call divides the) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.5 Tf 45.0 688.0 Td (array, sorts both halves, and merges them using temporary left and right arrays; the <= comparison) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.5 Tf 45.0 677.0 Td (preserves stability. The wrapper returns the same sorted input pointer. This has O\(n log n\) time) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.5 Tf 45.0 666.0 Td (complexity and O\(n\) temporary merge storage. The output passed the supplied sortedness check. The) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.5 Tf 45.0 655.0 Td (merge-sort structure was adapted from GeeksforGeeks, "Merge Sort,") Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.5 Tf 45.0 644.0 Td (https://www.geeksforgeeks.org/dsa/merge-sort/ \(accessed September 8, 2026\).) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F2 9.0 Tf 45.0 627.0 Td (Top-down profiling.) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.5 Tf 45.0 614.0 Td (I ran pmu-tools/toplev.py with -l1 -v --no-desc --force-cpu spr on the ECE 5755 compute node. The) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.5 Tf 45.0 603.0 Td (horizontal bar chart below compares the Level-1 pipeline bottleneck breakdown \(%\) for both) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.5 Tf 45.0 592.0 Td (implementations.) Tj ET Q
+q 0.820 0.820 0.820 RG 0.50 w 145.00 491.00 m 145.00 571.00 l S Q
+q 0.820 0.820 0.820 RG 0.50 w 210.00 491.00 m 210.00 571.00 l S Q
+q 0.820 0.820 0.820 RG 0.50 w 275.00 491.00 m 275.00 571.00 l S Q
+q 0.820 0.820 0.820 RG 0.50 w 340.00 491.00 m 340.00 571.00 l S Q
+q 0.820 0.820 0.820 RG 0.50 w 405.00 491.00 m 405.00 571.00 l S Q
+q 0.820 0.820 0.820 RG 0.50 w 470.00 491.00 m 470.00 571.00 l S Q
+q 0.500 0.500 0.500 RG 0.75 w 145.00 491.00 325.00 80.00 re S Q
+q 0.000 0.000 0.000 rg BT /F2 8.0 Tf 45.0 546.0 Td (mysort \(input_5000\)) Tj ET Q
+q 0.120 0.280 0.530 rg 145.00 539.00 82.55 22.00 re f Q
+q 0.890 0.310 0.160 rg 227.55 539.00 75.73 22.00 re f Q
+q 0.950 0.760 0.120 rg 303.28 539.00 60.77 22.00 re f Q
+q 0.330 0.580 0.230 rg 364.05 539.00 106.28 22.00 re f Q
+q 0.000 0.000 0.000 rg BT /F2 8.0 Tf 45.0 510.0 Td (bubble \(input_5000\)) Tj ET Q
+q 0.120 0.280 0.530 rg 145.00 503.00 7.47 22.00 re f Q
+q 0.890 0.310 0.160 rg 152.47 503.00 21.78 22.00 re f Q
+q 0.950 0.760 0.120 rg 174.25 503.00 63.38 22.00 re f Q
+q 0.330 0.580 0.230 rg 237.62 503.00 232.38 22.00 re f Q
+q 0.300 0.300 0.300 RG 0.75 w 145.00 488.00 m 145.00 491.00 l S Q
+q 0.000 0.000 0.000 rg BT /F1 7.5 Tf 143.1 479.0 Td (0) Tj ET Q
+q 0.300 0.300 0.300 RG 0.75 w 210.00 488.00 m 210.00 491.00 l S Q
+q 0.000 0.000 0.000 rg BT /F1 7.5 Tf 206.1 479.0 Td (20) Tj ET Q
+q 0.300 0.300 0.300 RG 0.75 w 275.00 488.00 m 275.00 491.00 l S Q
+q 0.000 0.000 0.000 rg BT /F1 7.5 Tf 271.1 479.0 Td (40) Tj ET Q
+q 0.300 0.300 0.300 RG 0.75 w 340.00 488.00 m 340.00 491.00 l S Q
+q 0.000 0.000 0.000 rg BT /F1 7.5 Tf 336.1 479.0 Td (60) Tj ET Q
+q 0.300 0.300 0.300 RG 0.75 w 405.00 488.00 m 405.00 491.00 l S Q
+q 0.000 0.000 0.000 rg BT /F1 7.5 Tf 401.1 479.0 Td (80) Tj ET Q
+q 0.300 0.300 0.300 RG 0.75 w 470.00 488.00 m 470.00 491.00 l S Q
+q 0.000 0.000 0.000 rg BT /F1 7.5 Tf 464.1 479.0 Td (100) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F2 8.0 Tf 238.9 467.0 Td (Pipeline bottleneck breakdown \(%\)) Tj ET Q
+q 0.120 0.280 0.530 rg 482.00 559.00 8.00 8.00 re f Q
+q 0.200 0.200 0.200 RG 0.30 w 482.00 559.00 8.00 8.00 re S Q
+q 0.000 0.000 0.000 rg BT /F1 7.5 Tf 494.0 560.0 Td (Frontend bound) Tj ET Q
+q 0.890 0.310 0.160 rg 482.00 541.00 8.00 8.00 re f Q
+q 0.200 0.200 0.200 RG 0.30 w 482.00 541.00 8.00 8.00 re S Q
+q 0.000 0.000 0.000 rg BT /F1 7.5 Tf 494.0 542.0 Td (Bad speculation) Tj ET Q
+q 0.950 0.760 0.120 rg 482.00 523.00 8.00 8.00 re f Q
+q 0.200 0.200 0.200 RG 0.30 w 482.00 523.00 8.00 8.00 re S Q
+q 0.000 0.000 0.000 rg BT /F1 7.5 Tf 494.0 524.0 Td (Backend bound) Tj ET Q
+q 0.330 0.580 0.230 rg 482.00 505.00 8.00 8.00 re f Q
+q 0.200 0.200 0.200 RG 0.30 w 482.00 505.00 8.00 8.00 re S Q
+q 0.000 0.000 0.000 rg BT /F1 7.5 Tf 494.0 506.0 Td (Retiring) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F2 8.0 Tf 45.0 453.0 Td (Implementation) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F2 8.0 Tf 170.0 453.0 Td (Frontend) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F2 8.0 Tf 255.0 453.0 Td (Bad spec.) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F2 8.0 Tf 335.0 453.0 Td (Backend) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F2 8.0 Tf 415.0 453.0 Td (Retiring) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.0 Tf 45.0 440.0 Td (Bubble sort) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.0 Tf 170.0 440.0 Td (2.3%) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.0 Tf 255.0 440.0 Td (6.7%) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.0 Tf 335.0 440.0 Td (19.5%) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.0 Tf 415.0 440.0 Td (71.5%) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.0 Tf 45.0 427.0 Td (Mergesort) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.0 Tf 170.0 427.0 Td (25.4%) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.0 Tf 255.0 427.0 Td (23.3%) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.0 Tf 335.0 427.0 Td (18.7%) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.0 Tf 415.0 427.0 Td (32.7%) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F2 9.0 Tf 45.0 408.0 Td (Observations.) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.5 Tf 45.0 395.0 Td (Bubble sort was dominated by retiring \(71.5%\), indicating that most measured slots completed useful) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.5 Tf 45.0 384.0 Td (instructions. Mergesort shifted toward frontend bound \(25.4%\) and bad speculation \(23.3%\), with only) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.5 Tf 45.0 373.0 Td (32.7% retiring. Its backend-bound percentage was similar to bubble sort \(18.7% versus 19.5%\). The) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.5 Tf 45.0 362.0 Td (different profile is consistent with mergesort recursion, merge control flow, and temporary-array) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.5 Tf 45.0 351.0 Td (accesses, although the percentages describe pipeline behavior rather than algorithmic complexity) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.5 Tf 45.0 340.0 Td (alone. Both runs reported 100% counter multiplexing coverage.) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F2 9.0 Tf 45.0 323.0 Td (Issues.) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.5 Tf 45.0 310.0 Td (Profiling from the login node was blocked by perf_event_paranoid=4; running inside an srun allocation) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.5 Tf 45.0 299.0 Td (on the instructional compute node resolved access. toplev also warned about the NMI watchdog and) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.5 Tf 45.0 288.0 Td (could not open an uncore file, but it still produced the core Level-1 results. The final packaged) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.5 Tf 45.0 277.0 Td (source leaves the verification call commented out as required for profiling.) Tj ET Q
+endstream
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000121 00000 n 
+0000000257 00000 n 
+0000000327 00000 n 
+0000000402 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+7607
+%%EOF

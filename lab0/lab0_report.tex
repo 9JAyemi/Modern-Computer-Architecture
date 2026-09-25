@@ -1,0 +1,42 @@
+\documentclass[10pt]{article}
+\usepackage[margin=0.65in]{geometry}
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{parskip}
+\setlength{\parindent}{0pt}
+\definecolor{frontend}{HTML}{D95F02}
+\definecolor{bad}{HTML}{7570B3}
+\definecolor{backend}{HTML}{1B9E77}
+\definecolor{retiring}{HTML}{E6AB02}
+\newcommand{\seg}[2]{\textcolor{#1}{\rule{#2cm}{0.34cm}}}
+\newcommand{\profilebar}[5]{%
+  \textbf{#1}\quad\seg{frontend}{#2}\seg{bad}{#3}\seg{backend}{#4}\seg{retiring}{#5}\par}
+\begin{document}
+\begin{center}
+{\Large\textbf{ECE 5755 Lab 0: Sorting and Top-Down Analysis}}\\[-2pt]
+\small 5,000-element input on Intel Xeon Silver 4514Y (Sapphire Rapids)
+\end{center}
+
+\textbf{Implementation.} I implemented an in-place, recursive top-down mergesort in \texttt{mysort.c}. Each recursive call divides the array, sorts both halves, and merges them using temporary left and right arrays; the comparison uses \texttt{<=}, preserving stability. The wrapper returns the same sorted input pointer. This has $O(n\log n)$ time complexity and $O(n)$ temporary merge storage. The output passed the supplied sortedness check. The merge-sort structure was adapted from GeeksforGeeks, ``Merge Sort,'' https://www.geeksforgeeks.org/dsa/merge-sort/ (accessed September 8, 2026).
+
+\textbf{Top-down profiling.} I ran \texttt{pmu-tools/toplev.py} with \texttt{-l1 -v --no-desc --force-cpu spr} on the ECE 5755 compute node. The bars show the collected Level-1 percentages; each bar totals 100\%.
+
+\vspace{3pt}
+\profilebar{Bubble}{0.345}{1.005}{2.925}{10.725}
+\profilebar{Mergesort}{3.810}{3.495}{2.805}{4.890}
+\vspace{2pt}
+\begin{tabular}{@{}>{\color{frontend}\rule{0.22cm}{0.22cm}\ }l >{\color{bad}\rule{0.22cm}{0.22cm}\ }l >{\color{backend}\rule{0.22cm}{0.22cm}\ }l >{\color{retiring}\rule{0.22cm}{0.22cm}\ }l@{}}
+Frontend-bound & Bad speculation & Backend-bound & Retiring\\
+\end{tabular}
+
+\smallskip
+\begin{tabular}{@{}lrrrr@{}}
+\textbf{Implementation} & \textbf{Frontend} & \textbf{Bad spec.} & \textbf{Backend} & \textbf{Retiring}\\
+Bubble sort & 2.3\% & 6.7\% & 19.5\% & 71.5\%\\
+Mergesort & 25.4\% & 23.3\% & 18.7\% & 32.7\%
+\end{tabular}
+
+\textbf{Observations.} Bubble sort was dominated by retiring (71.5\%), indicating that most measured slots completed useful instructions. Mergesort shifted toward frontend bound (25.4\%) and bad speculation (23.3\%), with only 32.7\% retiring. Its backend-bound percentage was similar to bubble sort (18.7\% versus 19.5\%). The different profile is consistent with mergesort's recursion, merge control flow, and temporary-array accesses, although the percentages describe pipeline behavior rather than algorithmic complexity alone. Both runs reported 100\% counter multiplexing coverage.
+
+\textbf{Issues.} Profiling from the login node was blocked by \texttt{perf\_event\_paranoid=4}; running inside an \texttt{srun} allocation on the instructional compute node resolved access. \texttt{toplev} also warned about the NMI watchdog and could not open an uncore file, but it still produced the core Level-1 results. The final packaged source leaves the verification call commented out as required for profiling.
+\end{document}

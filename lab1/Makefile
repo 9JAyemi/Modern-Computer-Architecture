@@ -35,7 +35,7 @@ all_tests:
 .PHONY : $(MATMUL_TARGETS)
 $(MATMUL_TARGETS):
 	$(CC) -o $@ ./perf/$@.c $(COMMON_SRC) $(CFLAGS) $(HDF5_FLAGS)
-	/classes/ece5755/pmu-tools/toplev.py --core S0-C0 -l$(LEVEL) -v --no-desc --force-cpu spr taskset -c 0 ./$@ $(SIZE)
+	/classes/ece5755/pmu-tools/toplev.py --core S0-C0 -l$(LEVEL) -v --no-desc --force-cpu spr ./$@ $(SIZE)
 
 .PHONY: clean
 clean:

@@ -1,0 +1,129 @@
+\documentclass[10pt]{article}
+\usepackage[margin=0.65in]{geometry}
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{parskip}
+\usepackage{hyperref}
+\setlength{\parindent}{0pt}
+
+% Top-down category colors.
+\definecolor{frontend}{HTML}{D95F02}
+\definecolor{bad}{HTML}{7570B3}
+\definecolor{backend}{HTML}{1B9E77}
+\definecolor{retiring}{HTML}{E6AB02}
+\newcommand{\seg}[2]{\textcolor{#1}{\rule{#2cm}{0.34cm}}}
+\newcommand{\profilebar}[5]{%
+  \makebox[2.15cm][l]{\textbf{#1}}%
+  \seg{frontend}{#2}\seg{bad}{#3}\seg{backend}{#4}\seg{retiring}{#5}\par}
+\newcommand{\fillin}[1]{\textit{[\ #1\ ]}}
+
+\begin{document}
+\begin{center}
+{\Large\textbf{ECE 5755 Lab 1: Kernel Implementation and Top-Down Analysis}}\\[-2pt]
+\small Intel Xeon Silver 4514Y (Sapphire Rapids); Level-2 profiling, size-500 runs
+\end{center}
+
+\textbf{Name:} \fillin{your name} \hfill
+\textbf{NetID:} \fillin{your NetID}
+
+\section*{1. Kernel implementations}
+
+\subsection*{Convolution}
+The \texttt{convolution()} function computes a valid multi-channel 2-D convolution. It allocates an output for each filter, initializes each output element with its filter bias, and accumulates products over every input channel and kernel row and column. For input side length $N$ and kernel side length $K$, the output side length is $N-K+1$. The implementation uses nested loops over filters, output coordinates, channels, and kernel coordinates. Its arithmetic work is $O(F(N-K+1)^2CK^2)$, where $F$ is the number of filters and $C$ is the number of channels.
+
+\textbf{Implementation details or design decisions:} \fillin{explain your convolution implementation, memory allocation, and indexing choices.}
+
+\subsection*{ReLU}
+The scalar \texttt{relu()} function returns $x$ when $x>0$ and zero otherwise. \texttt{applyRelu()} applies this operation in place to every element of an input array, avoiding a second output allocation. This gives linear work in the input size.
+
+\textbf{Implementation details or design decisions:} \fillin{explain how positive, negative, and zero inputs are handled.}
+
+\subsection*{Linear layer}
+The \texttt{linear()} function implements a fully connected layer. It allocates one output value per output neuron, initializes that value with the corresponding bias, and computes the dot product between the input vector and that neuron's weight row. Its work is $O(I O)$ for input size $I$ and output size $O$.
+
+\textbf{Implementation details or design decisions:} \fillin{explain the weight layout, bias handling, and output allocation.}
+
+\subsection*{Matrix multiplication}
+The \texttt{matmul()} function first checks that the left matrix column count equals the right matrix row count. It then allocates the result and uses the conventional three-loop algorithm: result row, result column, and inner product. Its work is $O(A_{rows}A_{cols}B_{cols})$ and it returns \texttt{NULL} for incompatible dimensions.
+
+\textbf{Implementation details or design decisions:} \fillin{explain initialization, indexing, and dimension validation.}
+
+\subsection*{Softmax}
+The \texttt{softmax()} function first finds the maximum input value, subtracts it before exponentiation for numerical stability, sums the exponentials, and returns the logarithm of each normalized probability. The returned values are log-probabilities, while exponentiating them gives probabilities whose sum is approximately one. The function allocates temporary exponential values and a separate output array.
+
+\textbf{Implementation details or design decisions:} \fillin{explain numerical stability, memory ownership, and why log-probabilities are returned.}
+
+\section*{2. Tests implemented}
+The Unity test driver in \texttt{tests/all\_tests.c} runs tests for convolution, neural-network helpers, functional operations, linear layers, and matrix operations. The tests check both ordinary cases and boundary or error cases: convolution behavior, flattening and prediction, softmax normalization, ReLU behavior, linear layers with zero/negative/large inputs and parameters, square matrix multiplication, and incompatible matrix dimensions.
+
+The purpose of these tests is to verify numerical correctness independently of performance measurements. In particular, dimension checks and negative or zero values expose indexing, initialization, bias, and branch-handling errors that may not appear in one ordinary example.
+
+\textbf{Additional tests or rationale:} \fillin{describe tests you added, changed, or considered most important.}
+
+\section*{3. Top-down profiling results}
+I profiled each standalone kernel driver with \texttt{pmu-tools/toplev.py} on an instructional compute node. The command used Level 2, the Sapphire Rapids CPU override, and a fixed input size of 500. Each bar below shows the Level-1 top-down categories and totals 100\%: frontend bound, bad speculation, backend bound, and retiring.
+
+\begin{center}
+\profilebar{convolution}{0.23}{0.20}{2.43}{7.14}
+\profilebar{relu}{2.84}{1.51}{3.10}{2.55}
+\profilebar{linear}{2.25}{1.23}{3.13}{3.40}
+\profilebar{matmul}{0.08}{0.12}{1.93}{7.87}
+\profilebar{softmax}{2.80}{1.51}{3.14}{2.55}
+\vspace{2pt}
+\begin{tabular}{@{}>{\color{frontend}\rule{0.22cm}{0.22cm}\ }l >{\color{bad}\rule{0.22cm}{0.22cm}\ }l >{\color{backend}\rule{0.22cm}{0.22cm}\ }l >{\color{retiring}\rule{0.22cm}{0.22cm}\ }l@{}}
+Frontend-bound & Bad speculation & Backend-bound & Retiring\\
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tabular}{@{}lrrrr@{}}
+\textbf{Kernel} & \textbf{Frontend} & \textbf{Bad spec.} & \textbf{Backend} & \textbf{Retiring}\\
+convolution() & 2.3\% & 2.0\% & 24.3\% & 71.4\%\\
+relu() & 28.4\% & 15.1\% & 31.0\% & 25.5\%\\
+linear() & 22.5\% & 12.3\% & 31.3\% & 34.0\%\\
+matmul() & 0.8\% & 1.2\% & 19.3\% & 78.7\%\\
+softmax() & 28.0\% & 15.1\% & 31.4\% & 25.5\%
+\end{tabular}
+\end{center}
+
+\textbf{Profiling procedure.} \fillin{state the exact commands, compute-node allocation, input sizes, repetitions, and whether output was redirected to files. Mention any \texttt{LEVEL}, \texttt{SIZE}, or sampling flags used.}
+
+\subsection*{Convolution observations and bottleneck}
+The convolution profile is dominated by retiring (71.4\%), with backend bound at 24.3\%. Its Level-2 breakdown reports approximately 22.7\% core bound and 1.6\% memory bound. This suggests that the measured execution mostly completed useful arithmetic, while the main secondary limitation was execution-resource pressure rather than data-fetch latency.
+
+\textbf{Your interpretation:} \fillin{explain why the loop nest and convolution arithmetic produce this profile, and discuss any size-dependent behavior.}
+
+\subsection*{ReLU observations and bottleneck}
+ReLU has a more balanced profile: 28.4\% frontend bound, 15.1\% bad speculation, 31.0\% backend bound, and 25.5\% retiring. Its Level-2 values include 17.1\% fetch latency, 11.4\% fetch bandwidth, 14.5\% branch mispredicts, and 19.2\% memory bound. The conditional operation and simple loop leave relatively little complex work retiring per instruction stream.
+
+\textbf{Your interpretation:} \fillin{explain the likely effects of the conditional branch, input distribution, memory access, and small versus large sizes.}
+
+\subsection*{Linear observations and bottleneck}
+The linear layer has 31.3\% backend bound and 34.0\% retiring. Its Level-2 breakdown is approximately 16.4\% memory bound and 14.8\% core bound, with 22.5\% frontend bound. The dot-product loop repeatedly loads input and weight values and performs multiply-add operations.
+
+\textbf{Your interpretation:} \fillin{identify the main bottleneck and connect it to the weight layout, cache behavior, and loop order.}
+
+\subsection*{Matrix multiplication observations and bottleneck}
+Matrix multiplication has the highest retiring fraction in this set (78.7\%) and relatively small frontend and bad-speculation fractions. Its backend bound value is 19.3\%, consisting of approximately 18.5\% core bound and 0.8\% memory bound. This profile is consistent with a regular triple loop that exposes substantial arithmetic work and predictable control flow.
+
+\textbf{Your interpretation:} \fillin{explain why the naive loop order performs as observed and discuss locality or computation improvements.}
+
+\subsection*{Softmax observations and bottleneck}
+Softmax has a profile similar to ReLU: 28.0\% frontend bound, 15.1\% bad speculation, 31.4\% backend bound, and 25.5\% retiring. Its Level-2 breakdown reports 16.7\% fetch latency, 11.4\% fetch bandwidth, 14.5\% branch mispredicts, and 19.2\% memory bound. The kernel performs multiple passes and includes exponential and logarithmic operations.
+
+\textbf{Your interpretation:} \fillin{discuss the multiple passes, temporary arrays, math-library operations, and why the profile resembles or differs from ReLU.}
+
+\section*{4. Debugging process}
+\fillin{Describe how you used compiler diagnostics, unit-test failures, targeted tests, debugger or memory-checking tools, and profiling output to locate and fix bugs. Include one or two concrete failures and the corresponding correction.}
+
+\section*{5. Performance improvements}
+The top-down data suggests several optimization directions. Frontend-bound kernels could benefit from reducing instruction and branch overhead, improving loop simplicity, and enabling compiler optimization or vectorization. Backend-bound kernels could benefit from better data locality, contiguous allocations, improved loop order, blocking or tiling, and reducing unnecessary temporary allocations. ReLU may benefit from branchless or vectorized execution when appropriate; linear and convolution may benefit from contiguous layouts and SIMD-friendly inner loops; matrix multiplication is a candidate for cache blocking; and softmax could reduce passes and temporary storage while preserving numerical stability.
+
+\textbf{Planned or measured improvements:} \fillin{describe the optimizations you attempted or would attempt, and cite the top-down metric that motivates each one. Do not claim an improvement without a measurement.}
+
+\section*{6. Profiling issues and reproducibility}
+\fillin{Record issues such as login-node restrictions, Slurm time limits, CPU affinity, NMI watchdog warnings, counter multiplexing, small-input overhead, failed runs, and how you resolved them. Include the location of the saved result files if useful.}
+
+\textbf{Source disclosure.} \fillin{List any external code, examples, documentation, or AI assistance used, according to the course policy.}
+
+\end{document}

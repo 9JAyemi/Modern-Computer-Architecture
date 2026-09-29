@@ -1,0 +1,11 @@
+Kernel: matmul_naive
+Top-down level: 2
+Input size: 5000
+
+$ make matmul_naive LEVEL=2 SIZE=5000
+
+gcc -o matmul_naive ./perf/matmul_naive.c ./utils/data_utils.c ./kernel/conv.c ./kernel/functional.c ./kernel/matrix_ops.c ./kernel/linear.c ./kernel/nn.c -I. -lm -I/usr/include/hdf5/serial -L/usr/lib/x86_64-linux-gnu/hdf5/serial -lhdf5
+/classes/ece5755/pmu-tools/toplev.py --core S0-C0 -l2 -v --no-desc --force-cpu spr ./matmul_naive 5000
+Consider disabling nmi watchdog to minimize multiplexing
+(echo 0 | sudo tee /proc/sys/kernel/nmi_watchdog or
+ echo kernel.nmi_watchdog=0 >> /etc/sysctl.conf ; sysctl -p as root)

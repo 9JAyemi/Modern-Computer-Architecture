@@ -1,0 +1,30 @@
+Kernel: relu_naive
+Top-down level: 2
+Input size: 1000
+
+$ make relu_naive LEVEL=2 SIZE=1000
+
+gcc -o relu_naive ./perf/relu_naive.c ./utils/data_utils.c ./kernel/conv.c ./kernel/functional.c ./kernel/matrix_ops.c ./kernel/linear.c ./kernel/nn.c -I. -lm -I/usr/include/hdf5/serial -L/usr/lib/x86_64-linux-gnu/hdf5/serial -lhdf5
+/classes/ece5755/pmu-tools/toplev.py --core S0-C0 -l2 -v --no-desc --force-cpu spr ./relu_naive 1000
+Consider disabling nmi watchdog to minimize multiplexing
+(echo 0 | sudo tee /proc/sys/kernel/nmi_watchdog or
+ echo kernel.nmi_watchdog=0 >> /etc/sysctl.conf ; sysctl -p as root)
+# 4.8-full-perf on INTEL(R) XEON(R) SILVER 4514Y [spr/sapphire_rapids]
+FE               Frontend_Bound                      % Slots                       28.0   
+BAD              Bad_Speculation                     % Slots                       15.1   
+BE               Backend_Bound                       % Slots                       31.4   
+RET              Retiring                            % Slots                       25.5  <
+FE               Frontend_Bound.Fetch_Latency        % Slots                       16.7   
+FE               Frontend_Bound.Fetch_Bandwidth      % Slots                       11.4  <
+BAD              Bad_Speculation.Branch_Mispredicts  % Slots                       14.1   
+BAD              Bad_Speculation.Machine_Clears      % Slots                        1.0  <
+BE/Mem           Backend_Bound.Memory_Bound          % Slots                       19.6  <
+BE/Core          Backend_Bound.Core_Bound            % Slots                       11.8   <==
+RET              Retiring.Light_Operations           % Slots                       22.0  <
+RET              Retiring.Heavy_Operations           % Slots                        3.5  <
+MUX                                                  %                            100.00  
+Run toplev --describe Core_Bound^ to get more information on bottleneck
+Add --run-sample to find locations
+Add --nodes '!+Core_Bound*/3,+MUX' for breakdown.
+
+Exit status: 0

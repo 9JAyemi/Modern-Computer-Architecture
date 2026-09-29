@@ -1,0 +1,206 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R 5 0 R] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 7 0 R /F2 8 0 R >> >> /Contents 4 0 R >>
+endobj
+4 0 obj
+<< /Length 9471 >>
+stream
+q 0.000 0.000 0.000 rg BT /F2 16.0 Tf 45.0 752.0 Td (ECE 5755 Lab 1: Kernel Implementation and Top-Down Analysis) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.5 Tf 45.0 736.0 Td (Intel Xeon Silver 4514Y \(Sapphire Rapids\); Level-2 profiling) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F2 11.0 Tf 45.0 709.0 Td (1. Kernel implementations) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F2 8.5 Tf 45.0 692.0 Td (Convolution.) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 681.0 Td (convolution\(\) computes a valid multi-channel 2-D convolution. It allocates one output image per) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 671.0 Td (filter, initializes each output with the filter bias, and accumulates products across channels and) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 661.0 Td (kernel coordinates. For input side N and kernel side K, the output side is N-K+1. The nested loops) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 651.0 Td (perform O\(F\(N-K+1\)^2 C K^2\) work.) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F2 8.5 Tf 45.0 637.0 Td (ReLU.) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 626.0 Td (relu\(\) returns x when x is positive and zero otherwise. applyRelu\(\) applies this operation in place) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 616.0 Td (across the input array, giving linear work and avoiding a second output allocation.) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F2 8.5 Tf 45.0 602.0 Td (Linear layer.) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 591.0 Td (linear\(\) implements a fully connected layer. Each output starts with its bias and accumulates a dot) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 581.0 Td (product between the input vector and one row of weights. Its work is O\(I O\), where I and O are the) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 571.0 Td (input and output sizes.) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F2 8.5 Tf 45.0 557.0 Td (Matrix multiplication.) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 546.0 Td (matmul\(\) checks that the left matrix column count equals the right matrix row count, allocates the) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 536.0 Td (result, and uses the conventional three-loop row-column-inner-product algorithm. It returns NULL for) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 526.0 Td (incompatible dimensions.) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F2 8.5 Tf 45.0 512.0 Td (Softmax.) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 501.0 Td (softmax\(\) first finds the maximum input, subtracts it before exponentiation for numerical stability,) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 491.0 Td (sums the exponentials, and returns log-normalized probabilities. It uses temporary storage for) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 481.0 Td (exponentials and a separate output array.) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F2 11.0 Tf 45.0 467.0 Td (2. Tests implemented) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 452.0 Td (The Unity test driver covers convolution, neural-network helpers, functional operations, linear) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 442.0 Td (layers, and matrix operations. The tests include ordinary cases and boundary cases such as zero and) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 432.0 Td (negative values, large inputs and parameters, softmax normalization, ReLU behavior, square matrix) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 422.0 Td (multiplication, and incompatible matrix dimensions. These tests separate numerical correctness from) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 412.0 Td (performance measurement and expose indexing, initialization, bias, allocation, and dimension-) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 402.0 Td (validation errors.) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F2 11.0 Tf 45.0 380.0 Td (3. Top-down analysis profile) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 366.0 Td (Each standalone kernel was profiled with pmu-tools/toplev.py on an instructional compute node. The) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 356.0 Td (chart shows the Level-1 categories reported during Level-2 runs with input size 500. Every bar totals) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 346.0 Td (100 percent.) Tj ET Q
+q 0.820 0.820 0.820 RG 0.50 w 155.00 320.00 m 155.00 225.00 l S Q
+q 0.000 0.000 0.000 rg BT /F1 7.0 Tf 150.0 211.0 Td (0) Tj ET Q
+q 0.820 0.820 0.820 RG 0.50 w 221.00 320.00 m 221.00 225.00 l S Q
+q 0.000 0.000 0.000 rg BT /F1 7.0 Tf 216.0 211.0 Td (20) Tj ET Q
+q 0.820 0.820 0.820 RG 0.50 w 287.00 320.00 m 287.00 225.00 l S Q
+q 0.000 0.000 0.000 rg BT /F1 7.0 Tf 282.0 211.0 Td (40) Tj ET Q
+q 0.820 0.820 0.820 RG 0.50 w 353.00 320.00 m 353.00 225.00 l S Q
+q 0.000 0.000 0.000 rg BT /F1 7.0 Tf 348.0 211.0 Td (60) Tj ET Q
+q 0.820 0.820 0.820 RG 0.50 w 419.00 320.00 m 419.00 225.00 l S Q
+q 0.000 0.000 0.000 rg BT /F1 7.0 Tf 414.0 211.0 Td (80) Tj ET Q
+q 0.820 0.820 0.820 RG 0.50 w 485.00 320.00 m 485.00 225.00 l S Q
+q 0.000 0.000 0.000 rg BT /F1 7.0 Tf 480.0 211.0 Td (100) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F2 8.0 Tf 257.0 196.0 Td (Pipeline bottleneck breakdown \(%\)) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F2 8.0 Tf 45.0 323.0 Td (convolution\(\)) Tj ET Q
+q 0.120 0.280 0.530 rg 155.00 314.00 7.59 17.00 re f Q
+q 0.890 0.310 0.160 rg 162.59 314.00 6.60 17.00 re f Q
+q 0.950 0.760 0.120 rg 169.19 314.00 80.19 17.00 re f Q
+q 0.330 0.580 0.230 rg 249.38 314.00 235.62 17.00 re f Q
+q 0.000 0.000 0.000 rg BT /F2 8.0 Tf 45.0 295.0 Td (relu\(\)) Tj ET Q
+q 0.120 0.280 0.530 rg 155.00 286.00 93.72 17.00 re f Q
+q 0.890 0.310 0.160 rg 248.72 286.00 49.83 17.00 re f Q
+q 0.950 0.760 0.120 rg 298.55 286.00 102.30 17.00 re f Q
+q 0.330 0.580 0.230 rg 400.85 286.00 84.15 17.00 re f Q
+q 0.000 0.000 0.000 rg BT /F2 8.0 Tf 45.0 267.0 Td (linear\(\)) Tj ET Q
+q 0.120 0.280 0.530 rg 155.00 258.00 74.25 17.00 re f Q
+q 0.890 0.310 0.160 rg 229.25 258.00 40.59 17.00 re f Q
+q 0.950 0.760 0.120 rg 269.84 258.00 103.29 17.00 re f Q
+q 0.330 0.580 0.230 rg 373.13 258.00 112.20 17.00 re f Q
+q 0.000 0.000 0.000 rg BT /F2 8.0 Tf 45.0 239.0 Td (matmul\(\)) Tj ET Q
+q 0.120 0.280 0.530 rg 155.00 230.00 2.64 17.00 re f Q
+q 0.890 0.310 0.160 rg 157.64 230.00 3.96 17.00 re f Q
+q 0.950 0.760 0.120 rg 161.60 230.00 63.69 17.00 re f Q
+q 0.330 0.580 0.230 rg 225.29 230.00 259.71 17.00 re f Q
+q 0.000 0.000 0.000 rg BT /F2 8.0 Tf 45.0 211.0 Td (softmax\(\)) Tj ET Q
+q 0.120 0.280 0.530 rg 155.00 202.00 92.40 17.00 re f Q
+q 0.890 0.310 0.160 rg 247.40 202.00 49.83 17.00 re f Q
+q 0.950 0.760 0.120 rg 297.23 202.00 103.62 17.00 re f Q
+q 0.330 0.580 0.230 rg 400.85 202.00 84.15 17.00 re f Q
+q 0.120 0.280 0.530 rg 45.00 184.00 8.00 8.00 re f Q
+q 0.200 0.200 0.200 RG .4 w 45.00 184.00 8.00 8.00 re S Q
+q 0.000 0.000 0.000 rg BT /F1 7.5 Tf 57.0 185.0 Td (Frontend bound) Tj ET Q
+q 0.890 0.310 0.160 rg 170.00 184.00 8.00 8.00 re f Q
+q 0.200 0.200 0.200 RG .4 w 170.00 184.00 8.00 8.00 re S Q
+q 0.000 0.000 0.000 rg BT /F1 7.5 Tf 182.0 185.0 Td (Bad speculation) Tj ET Q
+q 0.950 0.760 0.120 rg 295.00 184.00 8.00 8.00 re f Q
+q 0.200 0.200 0.200 RG .4 w 295.00 184.00 8.00 8.00 re S Q
+q 0.000 0.000 0.000 rg BT /F1 7.5 Tf 307.0 185.0 Td (Backend bound) Tj ET Q
+q 0.330 0.580 0.230 rg 420.00 184.00 8.00 8.00 re f Q
+q 0.200 0.200 0.200 RG .4 w 420.00 184.00 8.00 8.00 re S Q
+q 0.000 0.000 0.000 rg BT /F1 7.5 Tf 432.0 185.0 Td (Retiring) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F2 8.0 Tf 45.0 164.0 Td (Kernel) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F2 8.0 Tf 155.0 164.0 Td (Frontend) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F2 8.0 Tf 235.0 164.0 Td (Bad spec.) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F2 8.0 Tf 300.0 164.0 Td (Backend) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F2 8.0 Tf 385.0 164.0 Td (Retiring) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.0 Tf 45.0 152.0 Td (convolution\(\)) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.0 Tf 155.0 152.0 Td (2.3%) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.0 Tf 235.0 152.0 Td (2.0%) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.0 Tf 300.0 152.0 Td (24.3%) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.0 Tf 385.0 152.0 Td (71.4%) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.0 Tf 45.0 141.0 Td (relu\(\)) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.0 Tf 155.0 141.0 Td (28.4%) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.0 Tf 235.0 141.0 Td (15.1%) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.0 Tf 300.0 141.0 Td (31.0%) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.0 Tf 385.0 141.0 Td (25.5%) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.0 Tf 45.0 130.0 Td (linear\(\)) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.0 Tf 155.0 130.0 Td (22.5%) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.0 Tf 235.0 130.0 Td (12.3%) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.0 Tf 300.0 130.0 Td (31.3%) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.0 Tf 385.0 130.0 Td (34.0%) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.0 Tf 45.0 119.0 Td (matmul\(\)) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.0 Tf 155.0 119.0 Td (0.8%) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.0 Tf 235.0 119.0 Td (1.2%) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.0 Tf 300.0 119.0 Td (19.3%) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.0 Tf 385.0 119.0 Td (78.7%) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.0 Tf 45.0 108.0 Td (softmax\(\)) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.0 Tf 155.0 108.0 Td (28.0%) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.0 Tf 235.0 108.0 Td (15.1%) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.0 Tf 300.0 108.0 Td (31.4%) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.0 Tf 385.0 108.0 Td (25.5%) Tj ET Q
+endstream
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 7 0 R /F2 8 0 R >> >> /Contents 6 0 R >>
+endobj
+6 0 obj
+<< /Length 6166 >>
+stream
+q 0.000 0.000 0.000 rg BT /F2 11.0 Tf 45.0 750.0 Td (4. Profiling observations and bottlenecks) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F2 8.5 Tf 45.0 732.0 Td (Convolution.) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 721.0 Td (The profile is dominated by retiring \(71.4%\), with backend bound at 24.3%. The Level-2 breakdown is) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 711.0 Td (approximately 22.7% core bound and 1.6% memory bound. Explain how the filter/channel loop nest and) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 701.0 Td (arithmetic intensity produce this result. Add observations for other input sizes here.) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F2 8.5 Tf 45.0 683.0 Td (ReLU.) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 672.0 Td (ReLU has a balanced profile: 28.4% frontend bound, 15.1% bad speculation, 31.0% backend bound, and) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 662.0 Td (25.5% retiring. Its Level-2 values include 17.1% fetch latency, 11.4% fetch bandwidth, 14.5% branch) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 652.0 Td (mispredicts, and 19.2% memory bound. Explain the effects of the conditional branch, input) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 642.0 Td (distribution, and memory access.) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F2 8.5 Tf 45.0 624.0 Td (Linear.) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 613.0 Td (The linear layer has 31.3% backend bound and 34.0% retiring. Its Level-2 breakdown is approximately) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 603.0 Td (16.4% memory bound and 14.8% core bound, with 22.5% frontend bound. Relate the result to weight) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 593.0 Td (layout, cache behavior, and the dot-product loop order.) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F2 8.5 Tf 45.0 575.0 Td (Matmul.) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 564.0 Td (Matrix multiplication has the highest retiring fraction \(78.7%\) and small frontend and bad-) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 554.0 Td (speculation fractions. Its backend bound value is 19.3%, consisting of approximately 18.5% core bound) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 544.0 Td (and 0.8% memory bound. Explain the effect of regular control flow, arithmetic work, and locality in) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 534.0 Td (the naive loop order.) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F2 8.5 Tf 45.0 516.0 Td (Softmax.) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 505.0 Td (Softmax has a profile similar to ReLU: 28.0% frontend bound, 15.1% bad speculation, 31.4% backend) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 495.0 Td (bound, and 25.5% retiring. Its Level-2 breakdown includes 16.7% fetch latency, 11.4% fetch bandwidth,) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 485.0 Td (14.5% branch mispredicts, and 19.2% memory bound. Discuss multiple passes, temporary arrays, and) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 475.0 Td (math-library operations.) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F2 11.0 Tf 45.0 457.0 Td (5. Debugging process) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 442.0 Td (Describe how compiler diagnostics, unit-test failures, targeted tests, memory checking, and profiling) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 432.0 Td (output were used to locate and correct bugs. Include one or two concrete failures and the) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 422.0 Td (corresponding fixes.) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 402.0 Td (Student notes: ____________________________________________________________________________________) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 392.0 Td (____________________________________________________________________________________________________) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F2 11.0 Tf 45.0 372.0 Td (6. Performance improvements) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 357.0 Td (The top-down data suggests reducing instruction and branch overhead for frontend-bound kernels,) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 347.0 Td (improving locality and contiguous allocation for backend-bound kernels, and using compiler) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 337.0 Td (vectorization where appropriate. ReLU may benefit from branchless or SIMD execution; linear and) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 327.0 Td (convolution may benefit from contiguous layouts and SIMD-friendly inner loops; matmul is a candidate) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 317.0 Td (for cache blocking and loop reordering; and softmax could reduce passes and temporary storage while) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 307.0 Td (preserving numerical stability.) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 289.0 Td (Student notes: Describe the optimizations attempted or proposed and cite the top-down metric) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 279.0 Td (motivating each one. Do not claim an improvement without a measurement.) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 269.0 Td (____________________________________________________________________________________________________) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F2 11.0 Tf 45.0 249.0 Td (7. Profiling issues and source disclosure) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 234.0 Td (Record issues such as login-node perf restrictions, Slurm time limits, CPU affinity, NMI watchdog) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 224.0 Td (warnings, counter multiplexing, small-input overhead, failed runs, and how they were resolved. List) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 214.0 Td (any external code, documentation, or AI assistance according to the course policy.) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 204.0 Td (Student notes: ____________________________________________________________________________________) Tj ET Q
+q 0.000 0.000 0.000 rg BT /F1 8.2 Tf 45.0 194.0 Td (____________________________________________________________________________________________________) Tj ET Q
+endstream
+endobj
+7 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+8 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+xref
+0 9
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000127 00000 n 
+0000000263 00000 n 
+0000009786 00000 n 
+0000009922 00000 n 
+0000016140 00000 n 
+0000016210 00000 n 
+trailer
+<< /Size 9 /Root 1 0 R >>
+startxref
+16285
+%%EOF

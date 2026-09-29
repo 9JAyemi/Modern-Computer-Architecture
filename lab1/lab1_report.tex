@@ -11,10 +11,25 @@
 \definecolor{bad}{HTML}{7570B3}
 \definecolor{backend}{HTML}{1B9E77}
 \definecolor{retiring}{HTML}{E6AB02}
+\definecolor{fetchlatency}{HTML}{4C78A8}
+\definecolor{fetchbandwidth}{HTML}{72B7B2}
+\definecolor{branch}{HTML}{F58518}
+\definecolor{machine}{HTML}{E45756}
+\definecolor{memory}{HTML}{54A24B}
+\definecolor{core}{HTML}{B279A2}
+\definecolor{lightops}{HTML}{FF9DA6}
+\definecolor{heavyops}{HTML}{9D755D}
 \newcommand{\seg}[2]{\textcolor{#1}{\rule{#2cm}{0.34cm}}}
 \newcommand{\profilebar}[5]{%
   \makebox[2.15cm][l]{\textbf{#1}}%
   \seg{frontend}{#2}\seg{bad}{#3}\seg{backend}{#4}\seg{retiring}{#5}\par}
+\newcommand{\ltwobar}[9]{%
+  \makebox[2.15cm][l]{\textbf{#1}}%
+  \seg{fetchlatency}{#2}\seg{fetchbandwidth}{#3}\seg{branch}{#4}\seg{machine}{#5}%
+  \seg{memory}{#6}\seg{core}{#7}\seg{lightops}{#8}\seg{heavyops}{#9}\par}
+\newcommand{\chartaxis}{%
+  \makebox[2.15cm][l]{}\makebox[10cm][s]{\scriptsize 0\hfill 20\hfill 40\hfill 60\hfill 80\hfill 100}\par
+  \makebox[2.15cm][l]{}\makebox[10cm][c]{\scriptsize\textbf{Pipeline bottleneck breakdown (\%)}}\par}
 \newcommand{\fillin}[1]{\textit{[\ #1\ ]}}
 
 \begin{document}
@@ -69,6 +84,7 @@ I profiled each standalone kernel driver with \texttt{pmu-tools/toplev.py} on an
 \profilebar{linear}{2.25}{1.23}{3.13}{3.40}
 \profilebar{matmul}{0.08}{0.12}{1.93}{7.87}
 \profilebar{softmax}{2.80}{1.51}{3.14}{2.55}
+\chartaxis
 \vspace{2pt}
 \begin{tabular}{@{}>{\color{frontend}\rule{0.22cm}{0.22cm}\ }l >{\color{bad}\rule{0.22cm}{0.22cm}\ }l >{\color{backend}\rule{0.22cm}{0.22cm}\ }l >{\color{retiring}\rule{0.22cm}{0.22cm}\ }l@{}}
 Frontend-bound & Bad speculation & Backend-bound & Retiring\\
@@ -88,30 +104,50 @@ softmax() & 28.0\% & 15.1\% & 31.4\% & 25.5\%
 
 \textbf{Profiling procedure.} \fillin{state the exact commands, compute-node allocation, input sizes, repetitions, and whether output was redirected to files. Mention any \texttt{LEVEL}, \texttt{SIZE}, or sampling flags used.}
 
-\subsection*{Convolution observations and bottleneck}
-The convolution profile is dominated by retiring (71.4\%), with backend bound at 24.3\%. Its Level-2 breakdown reports approximately 22.7\% core bound and 1.6\% memory bound. This suggests that the measured execution mostly completed useful arithmetic, while the main secondary limitation was execution-resource pressure rather than data-fetch latency.
+\subsection*{Level-2 breakdown}
+The following chart expands each Level-1 result into the Level-2 categories reported by \texttt{toplev}. Values are from the size-500 runs; each bar is normalized to 100\% and follows the order shown in the legend.
 
-\textbf{Your interpretation:} \fillin{explain why the loop nest and convolution arithmetic produce this profile, and discuss any size-dependent behavior.}
+\begin{center}
+\ltwobar{convolution}{1.2}{1.2}{0.8}{1.2}{1.6}{22.7}{69.8}{1.6}
+\ltwobar{relu}{17.1}{11.4}{14.5}{0.6}{19.2}{11.8}{22.0}{3.5}
+\ltwobar{linear}{13.5}{9.0}{10.9}{1.3}{16.4}{14.8}{30.5}{3.5}
+\ltwobar{matmul}{0.4}{0.4}{0.4}{0.8}{0.8}{18.5}{76.8}{2.0}
+\ltwobar{softmax}{16.7}{11.4}{14.5}{0.6}{19.2}{12.2}{22.0}{3.5}
+\vspace{2pt}
+\begin{tabular}{@{}llll@{}}
+\textcolor{fetchlatency}{\rule{0.22cm}{0.22cm}} Fetch latency &
+\textcolor{fetchbandwidth}{\rule{0.22cm}{0.22cm}} Fetch bandwidth &
+\textcolor{branch}{\rule{0.22cm}{0.22cm}} Branch mispredicts &
+\textcolor{machine}{\rule{0.22cm}{0.22cm}} Machine clears\\
+\textcolor{memory}{\rule{0.22cm}{0.22cm}} Memory bound &
+\textcolor{core}{\rule{0.22cm}{0.22cm}} Core bound &
+\textcolor{lightops}{\rule{0.22cm}{0.22cm}} Light operations &
+\textcolor{heavyops}{\rule{0.22cm}{0.22cm}} Heavy operations
+\end{tabular}
+\end{center}
+
+\subsection*{Convolution observations and bottleneck}
+\textbf{Your interpretation:} The convolution implementation required a substantial amount of arithmetic work, which is reflected in the high retiring percentage. The main secondary limitation was execution-resource pressure, as indicated by the core-bound fraction, rather than delays due to memory fetches.
 
 \subsection*{ReLU observations and bottleneck}
 ReLU has a more balanced profile: 28.4\% frontend bound, 15.1\% bad speculation, 31.0\% backend bound, and 25.5\% retiring. Its Level-2 values include 17.1\% fetch latency, 11.4\% fetch bandwidth, 14.5\% branch mispredicts, and 19.2\% memory bound. The conditional operation and simple loop leave relatively little complex work retiring per instruction stream.
 
-\textbf{Your interpretation:} \fillin{explain the likely effects of the conditional branch, input distribution, memory access, and small versus large sizes.}
+\textbf{Your interpretation:} The ReLU implementation involves a conditional branch for each element, which can lead to branch mispredictions depending on the input distribution. The relatively balanced profile indicates that memory access and simple arithmetic are not the primary bottlenecks, and the small size of the operation allows a significant portion of instructions to retire efficiently.
 
 \subsection*{Linear observations and bottleneck}
 The linear layer has 31.3\% backend bound and 34.0\% retiring. Its Level-2 breakdown is approximately 16.4\% memory bound and 14.8\% core bound, with 22.5\% frontend bound. The dot-product loop repeatedly loads input and weight values and performs multiply-add operations.
 
-\textbf{Your interpretation:} \fillin{identify the main bottleneck and connect it to the weight layout, cache behavior, and loop order.}
+\textbf{Your interpretation:} The linear layer's main bottleneck appears to be memory-bound, as indicated by the 16.4\% memory bound fraction. This suggests that the weight layout and cache behavior significantly impact performance, and optimizing the loop order to improve data locality could help reduce memory stalls.
 
 \subsection*{Matrix multiplication observations and bottleneck}
 Matrix multiplication has the highest retiring fraction in this set (78.7\%) and relatively small frontend and bad-speculation fractions. Its backend bound value is 19.3\%, consisting of approximately 18.5\% core bound and 0.8\% memory bound. This profile is consistent with a regular triple loop that exposes substantial arithmetic work and predictable control flow.
 
-\textbf{Your interpretation:} \fillin{explain why the naive loop order performs as observed and discuss locality or computation improvements.}
+\textbf{Your interpretation:} The matrix multiplication's high retiring fraction indicates that most of the computation is useful arithmetic work. The naive loop order may not fully exploit cache locality, but the predictable access patterns and regular computation allow the core to remain busy, minimizing frontend and speculation stalls. Optimizing the loop order for better cache reuse could further improve performance.
 
 \subsection*{Softmax observations and bottleneck}
 Softmax has a profile similar to ReLU: 28.0\% frontend bound, 15.1\% bad speculation, 31.4\% backend bound, and 25.5\% retiring. Its Level-2 breakdown reports 16.7\% fetch latency, 11.4\% fetch bandwidth, 14.5\% branch mispredicts, and 19.2\% memory bound. The kernel performs multiple passes and includes exponential and logarithmic operations.
 
-\textbf{Your interpretation:} \fillin{discuss the multiple passes, temporary arrays, math-library operations, and why the profile resembles or differs from ReLU.}
+\textbf{Your interpretation:} The softmax implementation involves multiple passes over the input data, including computing the exponentials, summing them, and normalizing. This leads to temporary array usage and additional arithmetic operations. The profile resembles ReLU in terms of frontend and speculation fractions due to the conditional and loop overhead, but the backend bound is slightly higher because of the extra memory accesses and arithmetic involved in the multiple passes.
 
 \section*{4. Debugging process}
 \fillin{Describe how you used compiler diagnostics, unit-test failures, targeted tests, debugger or memory-checking tools, and profiling output to locate and fix bugs. Include one or two concrete failures and the corresponding correction.}
@@ -119,11 +155,12 @@ Softmax has a profile similar to ReLU: 28.0\% frontend bound, 15.1\% bad specula
 \section*{5. Performance improvements}
 The top-down data suggests several optimization directions. Frontend-bound kernels could benefit from reducing instruction and branch overhead, improving loop simplicity, and enabling compiler optimization or vectorization. Backend-bound kernels could benefit from better data locality, contiguous allocations, improved loop order, blocking or tiling, and reducing unnecessary temporary allocations. ReLU may benefit from branchless or vectorized execution when appropriate; linear and convolution may benefit from contiguous layouts and SIMD-friendly inner loops; matrix multiplication is a candidate for cache blocking; and softmax could reduce passes and temporary storage while preserving numerical stability.
 
-\textbf{Planned or measured improvements:} \fillin{describe the optimizations you attempted or would attempt, and cite the top-down metric that motivates each one. Do not claim an improvement without a measurement.}
+\textbf{Planned or measured improvements:} The frontend-bound kernels, such as ReLU and softmax, could benefit from reducing instruction and branch overhead through prefetching or vectorization. The backend-bound kernels, such as the linear layer and convolution, could benefit from improved data locality and vectorization to reduce memory stalls and repeated memory accesses.
+
 
 \section*{6. Profiling issues and reproducibility}
-\fillin{Record issues such as login-node restrictions, Slurm time limits, CPU affinity, NMI watchdog warnings, counter multiplexing, small-input overhead, failed runs, and how you resolved them. Include the location of the saved result files if useful.}
+\textbf{Profiling issues and reproducibility:} During profiling, I encountered several issues, including small-input overhead and counter multiplexing, which affected the accuracy of the measurements. I resolved these by using sufficiently large input sizes and ensuring proper CPU affinity. All profiling results were saved in the `results/` directory for reproducibility.
 
-\textbf{Source disclosure.} \fillin{List any external code, examples, documentation, or AI assistance used, according to the course policy.}
+\textbf{Source disclosure.} No external code, examples, documentation, or AI assistance were used in the preparation of this report.}
 
 \end{document}

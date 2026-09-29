@@ -108,11 +108,11 @@ softmax() & 28.0\% & 15.1\% & 31.4\% & 25.5\%
 The following chart expands each Level-1 result into the Level-2 categories reported by \texttt{toplev}. Values are from the size-500 runs; each bar is normalized to 100\% and follows the order shown in the legend.
 
 \begin{center}
-\ltwobar{convolution}{1.2}{1.2}{0.8}{1.2}{1.6}{22.7}{69.8}{1.6}
-\ltwobar{relu}{17.1}{11.4}{14.5}{0.6}{19.2}{11.8}{22.0}{3.5}
-\ltwobar{linear}{13.5}{9.0}{10.9}{1.3}{16.4}{14.8}{30.5}{3.5}
-\ltwobar{matmul}{0.4}{0.4}{0.4}{0.8}{0.8}{18.5}{76.8}{2.0}
-\ltwobar{softmax}{16.7}{11.4}{14.5}{0.6}{19.2}{12.2}{22.0}{3.5}
+\ltwobar{convolution}{0.12}{0.12}{0.08}{0.12}{0.16}{2.27}{6.98}{0.16}
+\ltwobar{relu}{1.71}{1.14}{1.45}{0.06}{1.92}{1.18}{2.20}{0.35}
+\ltwobar{linear}{1.35}{0.90}{1.09}{0.13}{1.64}{1.48}{3.05}{0.35}
+\ltwobar{matmul}{0.04}{0.04}{0.04}{0.08}{0.08}{1.85}{7.68}{0.20}
+\ltwobar{softmax}{1.67}{1.14}{1.45}{0.06}{1.92}{1.22}{2.20}{0.35}
 \vspace{2pt}
 \begin{tabular}{@{}llll@{}}
 \textcolor{fetchlatency}{\rule{0.22cm}{0.22cm}} Fetch latency &
@@ -151,8 +151,8 @@ The top-down data suggests several optimization directions. Frontend-bound kerne
 
 
 \section*{6. Profiling issues and reproducibility}
-\textbf{Profiling issues and reproducibility:} During profiling, I encountered several issues, including small-input overhead and counter multiplexing, which affected the accuracy of the measurements. I resolved these by using sufficiently large input sizes and ensuring proper CPU affinity. All profiling results were saved in the `results/` directory for reproducibility.
+\textbf{Profiling issues and reproducibility:} During profiling, I encountered several issues, including small-input overhead, counter access restrictions, and Slurm time limits. I ran the measurements on an instructional compute node and saved the outputs in the \texttt{perf\_results/} directory for reproducibility.
 
-\textbf{Source disclosure.} No external code, examples, documentation, or AI assistance were used in the preparation of this report.}
+\textbf{Source disclosure.} GitHub Copilot was used for coding assistance. Any external code or documentation used should also be cited here.
 
 \end{document}

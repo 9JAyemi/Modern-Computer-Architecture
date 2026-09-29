@@ -1,3 +1,4 @@
+// AI coding assistance (GitHub Copilot) was used on this file.
 #include "functional.h"
 
 float relu(float x)

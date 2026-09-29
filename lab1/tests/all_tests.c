@@ -1,3 +1,4 @@
+// AI coding assistance (GitHub Copilot) was used on this file.
 #include "unity/unity.h"
 #include "test_conv.h"
 #include "test_nn.h"
@@ -7,11 +8,16 @@
 
 void setUp(void) {
     /* Code here will run before each test */
-    
+    float dummy = 0;
+    (void)dummy;
+
 }
 
 void tearDown(void) {
     /* Code here will run after each test */
+    int dummy = 0;
+    (void)dummy;
+
 
 }
 
@@ -34,6 +40,17 @@ int main(void) {
     // Test linear
     RUN_TEST(test_linear_basic);
     RUN_TEST(test_linear_basic2);
+    RUN_TEST(test_linear_with_zero_bias);
+    RUN_TEST(test_linear_with_negative_weights);
+    RUN_TEST(test_linear_with_negative_bias);
+    RUN_TEST(test_linear_with_all_zero_weights_and_bias);
+    RUN_TEST(test_linear_with_large_input);
+    RUN_TEST(test_linear_with_large_weights);
+    RUN_TEST(test_linear_with_large_bias);
+    RUN_TEST(test_linear_with_zero_bias);
+    RUN_TEST(test_linear_with_large_input);
+    RUN_TEST(test_linear_with_negative_input);
+    RUN_TEST(test_linear_with_negative_weights_and_bias);
 
     // Test matrix_ops
     RUN_TEST(test_matmul_square_matrices);

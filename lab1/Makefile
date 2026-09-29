@@ -11,7 +11,9 @@ TEST_FILES = $(wildcard ./tests/*.c)
 TEST_EXECUTABLES = $(patsubst %.c,%,$(TEST_FILES))
 
 # Performance
-MATMUL_TARGETS = matmul_naive
+MATMUL_TARGETS = matmul_naive conv_naive relu_naive linear_naive softmax_naive
+SIZE ?= 100
+LEVEL ?= 1
 
 BINS = lab1
 
@@ -33,7 +35,7 @@ all_tests:
 .PHONY : $(MATMUL_TARGETS)
 $(MATMUL_TARGETS):
 	$(CC) -o $@ ./perf/$@.c $(COMMON_SRC) $(CFLAGS) $(HDF5_FLAGS)
-	/classes/ece5755/pmu-tools/toplev.py --core S0-C0 -l1 -v --no-desc taskset -c 0 ./$@
+	/classes/ece5755/pmu-tools/toplev.py --core S0-C0 -l$(LEVEL) -v --no-desc --force-cpu spr taskset -c 0 ./$@ $(SIZE)
 
 .PHONY: clean
 clean:

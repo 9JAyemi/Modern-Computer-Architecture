@@ -1,3 +1,4 @@
+// AI coding assistance (GitHub Copilot) was used on this file.
 #include "nn.h"
 
 float *flatten(float ***input, int inputSize, int depth)

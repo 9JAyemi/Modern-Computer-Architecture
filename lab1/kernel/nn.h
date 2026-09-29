@@ -1,3 +1,4 @@
+// AI coding assistance (GitHub Copilot) was used on this file.
 #ifndef NN_H
 #define NN_H
 

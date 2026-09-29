@@ -21,9 +21,14 @@ void free_matrix(float **matrix, int rows) {
     free(matrix);
 }
 
-int main() {
+int main(int argc, char *argv[]) {
+    if (argc != 2)
+    {
+        printf("Usage: %s <inputSize>\n", argv[0]);
+        return 1;
+    }
     srand(time(NULL));
-    int A_rows = 1300, A_cols = 1300, B_rows = 1300, B_cols = 1300;
+    int A_rows = atoi(argv[1]), A_cols = A_rows, B_rows = A_rows, B_cols = A_rows;
 
     if (A_cols != B_rows) {
         printf("Matrix dimensions incompatible for multiplication.\n");

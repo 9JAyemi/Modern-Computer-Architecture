@@ -38,42 +38,42 @@
 \small Intel Xeon Silver 4514Y (Sapphire Rapids); Level-2 profiling, size-500 runs
 \end{center}
 
-\textbf{Name:} \fillin{Abiola} \hfill
-\textbf{NetID:} \fillin{ab3394}
+\textbf{Name:} Abiola \hfill
+\textbf{NetID:} ab3394
 
 \section*{1. Kernel implementations}
 
 \subsection*{Convolution}
 The \texttt{convolution()} function computes a valid multi-channel 2-D convolution. It allocates an output for each filter, initializes each output element with its filter bias, and accumulates products over every input channel and kernel row and column. For input side length $N$ and kernel side length $K$, the output side length is $N-K+1$. The implementation uses nested loops over filters, output coordinates, channels, and kernel coordinates. Its arithmetic work is $O(F(N-K+1)^2CK^2)$, where $F$ is the number of filters and $C$ is the number of channels.
 
-\textbf{Implementation details or design decisions:} \fillin{explain your convolution implementation, memory allocation, and indexing choices.}
+\textbf{Implementation details:} The output is stored as a three-level pointer structure indexed by filter, output row, and output column. Each output starts at its filter bias; the loops then accumulate the product of the corresponding input pixel and kernel coefficient across channels and kernel coordinates. The test driver initializes a 3-channel image and 2 filters. The implementation uses valid convolution with unit stride and no padding.
 
 \subsection*{ReLU}
 The scalar \texttt{relu()} function returns $x$ when $x>0$ and zero otherwise. \texttt{applyRelu()} applies this operation in place to every element of an input array, avoiding a second output allocation. This gives linear work in the input size.
 
-\textbf{Implementation details or design decisions:} \fillin{explain how positive, negative, and zero inputs are handled.}
+\textbf{Implementation details:} The comparison returns the input unchanged when it is positive and zero for zero or negative values. The array helper applies this scalar operation in place. The functional test checks positive, zero, and negative examples.
 
 \subsection*{Linear layer}
 The \texttt{linear()} function implements a fully connected layer. It allocates one output value per output neuron, initializes that value with the corresponding bias, and computes the dot product between the input vector and that neuron's weight row. Its work is $O(I O)$ for input size $I$ and output size $O$.
 
-\textbf{Implementation details or design decisions:} \fillin{explain the weight layout, bias handling, and output allocation.}
+\textbf{Implementation details:} Weights are addressed as \texttt{weights[outputIndex][inputIndex]}. The function allocates an output vector, initializes each output with its matching bias, then accumulates the input-weight products. The caller owns and frees the returned vector.
 
 \subsection*{Matrix multiplication}
 The \texttt{matmul()} function first checks that the left matrix column count equals the right matrix row count. It then allocates the result and uses the conventional three-loop algorithm: result row, result column, and inner product. Its work is $O(A_{rows}A_{cols}B_{cols})$ and it returns \texttt{NULL} for incompatible dimensions.
 
-\textbf{Implementation details or design decisions:} \fillin{explain initialization, indexing, and dimension validation.}
+\textbf{Implementation details:} The function rejects incompatible dimensions when \texttt{A\_cols != B\_rows}. For compatible inputs, it allocates a row-pointer result matrix, initializes each \texttt{C[i][j]} to zero, and accumulates \texttt{A[i][k] * B[k][j]} over the shared dimension. The caller frees the result rows and outer pointer.
 
 \subsection*{Softmax}
 The \texttt{softmax()} function first finds the maximum input value, subtracts it before exponentiation for numerical stability, sums the exponentials, and returns the logarithm of each normalized probability. The returned values are log-probabilities, while exponentiating them gives probabilities whose sum is approximately one. The function allocates temporary exponential values and a separate output array.
 
-\textbf{Implementation details or design decisions:} \fillin{explain numerical stability, memory ownership, and why log-probabilities are returned.}
+\textbf{Implementation details:} Subtracting the maximum input before calling \texttt{exp()} reduces overflow risk without changing the normalized distribution. The implementation stores exponentials temporarily, sums them, writes \texttt{log(expValue / sum)} to a separate output vector, and frees the temporary array. The caller owns and frees the returned log-probability vector.
 
 \section*{2. Tests implemented}
 The Unity test driver in \texttt{tests/all\_tests.c} runs tests for convolution, neural-network helpers, functional operations, linear layers, and matrix operations. The tests check both ordinary cases and boundary or error cases: convolution behavior, flattening and prediction, softmax normalization, ReLU behavior, linear layers with zero/negative/large inputs and parameters, square matrix multiplication, and incompatible matrix dimensions.
 
 The purpose of these tests is to verify numerical correctness independently of performance measurements. In particular, dimension checks and negative or zero values expose indexing, initialization, bias, and branch-handling errors that may not appear in one ordinary example.
 
-\textbf{Additional tests or rationale:} \fillin{describe tests you added, changed, or considered most important.}
+\textbf{Additional test rationale:} The test driver runs the linear cases for zero weights and biases, negative weights and biases, and large-magnitude inputs, weights, and biases. Neural-network tests check channel-major flattening and prediction for a maximum, a tie, and mixed signs. Softmax is checked by verifying that exponentiated outputs sum to one and preserve the maximum index; matrix multiplication is checked for both a known product and incompatible dimensions. Some linear test functions are registered more than once in the driver, so the total invocation count includes repeats.
 
 \section*{3. Top-down profiling results}
 I profiled each standalone kernel driver with \texttt{pmu-tools/toplev.py} on an instructional compute node. The command used Level 2, the Sapphire Rapids CPU override, and a fixed input size of 500. Each bar below shows the Level-1 top-down categories and totals 100\%: frontend bound, bad speculation, backend bound, and retiring.
@@ -102,7 +102,7 @@ softmax() & 28.0\% & 15.1\% & 31.4\% & 25.5\%
 \end{tabular}
 \end{center}
 
-\textbf{Profiling procedure.} \fillin{state the exact commands, compute-node allocation, input sizes, repetitions, and whether output was redirected to files. Mention any \texttt{LEVEL}, \texttt{SIZE}, or sampling flags used.}
+\textbf{Profiling procedure.} I ran one measurement per kernel for the chart at size 500 on the instructional Sapphire Rapids compute node, using \texttt{LEVEL=2}. The runner invokes \texttt{make <kernel> LEVEL=2 SIZE=500}; the Makefile builds the selected driver and invokes \texttt{toplev.py --core S0-C0 -l2 -v --no-desc --force-cpu spr ./<kernel> 500}. The runner redirects each command's standard output and error to its own file in \texttt{perf\_results/}. All five size-500 files report exit status 0 and \texttt{MUX=100\%}. These are single-run measurements, not averages.
 
 \subsection*{Level-2 breakdown}
 The following chart expands each Level-1 result into the Level-2 categories reported by \texttt{toplev}. Values are from the size-500 runs; each bar is normalized to 100\% and follows the order shown in the legend.
@@ -142,7 +142,7 @@ The following chart expands each Level-1 result into the Level-2 categories repo
 \textbf{Your interpretation:} The softmax implementation involves multiple passes over the input data, including computing the exponentials, summing them, and normalizing. This leads to temporary array usage and additional arithmetic operations. The profile resembles ReLU in terms of frontend and speculation fractions due to the conditional and loop overhead, but the backend bound is slightly higher because of the extra memory accesses and arithmetic involved in the multiple passes.
 
 \section*{4. Debugging process}
-\fillin{Describe how you used compiler diagnostics, unit-test failures, targeted tests, debugger or memory-checking tools, and profiling output to locate and fix bugs. Include one or two concrete failures and the corresponding correction.}
+I used the failing unit tests to isolate incorrect outputs, then ran the test binary under Valgrind with origin tracking. Valgrind reported an invalid read in \texttt{flatten()}; the code indexed the image as row-column-channel even though the allocated image is channel-row-column. Changing the access to \texttt{input[channel][row][column]} fixed the out-of-bounds read and stopped it from corrupting later tests. The softmax test also exposed that the function returned normalized probabilities while the implementation contract is log-softmax; returning the logarithm of each normalized exponential fixed the check that exponentiated outputs sum to one. After these corrections, the test driver reported 22 passing invocations and no failures. I also used profiler output to identify environment issues: perf counters were denied on the login node, and pinning with \texttt{taskset -c 0} failed when CPU 0 was outside the Slurm CPU set. Profiling succeeded after running on a compute node and removing the fixed CPU pin.
 
 \section*{5. Performance improvements}
 The top-down data suggests several optimization directions. Frontend-bound kernels could benefit from reducing instruction and branch overhead, improving loop simplicity, and enabling compiler optimization or vectorization. Backend-bound kernels could benefit from better data locality, contiguous allocations, improved loop order, blocking or tiling, and reducing unnecessary temporary allocations. ReLU may benefit from branchless or vectorized execution when appropriate; linear and convolution may benefit from contiguous layouts and SIMD-friendly inner loops; matrix multiplication is a candidate for cache blocking; and softmax could reduce passes and temporary storage while preserving numerical stability.

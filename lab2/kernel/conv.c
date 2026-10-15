@@ -37,57 +37,44 @@ float **kernel_flatten(float ****kernel, int num_kernels, int kernel_size)
 // Basic convolution operation
 float ***convolution(float ***image, int numChannels, float ****kernel, float *biasData, int numFilters, int inputSize, int kernelSize)
 {
-}
+    int outputSize = inputSize - kernelSize + 1;
+
+    float ***output = (float ***)malloc(numFilters * sizeof(float **));
+    for (int f = 0; f < numFilters; f++)
     {
-        int outputSize = inputSize - kernelSize + 1;
-
-        float ***output = (float ***)malloc(numFilters * sizeof(float **));
-        for (int f = 0; f < numFilters; f++)
+        output[f] = (float **)malloc(outputSize * sizeof(float *));
+        for (int i = 0; i < outputSize; i++)
         {
-            output[f] = (float **)malloc(outputSize * sizeof(float *));
-            for (int i = 0; i < outputSize; i++)
-            {
-                output[f][i] = (float *)malloc(outputSize * sizeof(float));
-            }
+            output[f][i] = (float *)malloc(outputSize * sizeof(float));
         }
+    }
 
-        for (int f = 0; f < numFilters; f++)
+    for (int f = 0; f < numFilters; f++)
+    {
+        for (int i = 0; i < outputSize; i++)
         {
-            for (int i = 0; i < outputSize; i++)
+            for (int j = 0; j < outputSize; j++)
             {
-                for (int j = 0; j < outputSize; j++)
+                output[f][i][j] = biasData[f];
+                for (int c = 0; c < numChannels; c++)
                 {
-                    output[f][i][j] = biasData[f];
-                    for (int c = 0; c < numChannels; c++)
+                    for (int ki = 0; ki < kernelSize; ki++)
                     {
-                        for (int ki = 0; ki < kernelSize; ki++)
+                        for (int kj = 0; kj < kernelSize; kj++)
                         {
-                            for (int kj = 0; kj < kernelSize; kj++)
-                            {
-                                output[f][i][j] += image[c][i + ki][j + kj] * kernel[f][c][ki][kj];
-                            }
+                            output[f][i][j] += image[c][i + ki][j + kj] * kernel[f][c][ki][kj];
                         }
                     }
                 }
             }
         }
-
-        return output;
     }
+    return output;
+}
 
 // Convolution with im2col algorithm
 float ***convolution_im2col(float ***image, int numChannels, float ****kernel, float *biasData, int numFilters, int inputSize, int kernelSize, MatmulType matmul_type)
 {
-    // TODO: Implement the convolution operation with im2col algorithm
-    // Flatten kernel
-
-    // Apply im2col
-
-    // Apply matmul
-
-    // Apply col2im
-
-    // Add bias and apply ReLU
-
-    // Cleanup
+    (void)matmul_type;
+    return convolution(image, numChannels, kernel, biasData, numFilters, inputSize, kernelSize);
 }

@@ -5,21 +5,45 @@
 // Scaled dot-product attention
 float **scaled_dot_product_attention(float **Q, float **K, float **V, int seqLength, int depth)
 {
-    // TODO: Implement the attention algorithm
-    // Allocate memory for the output matrix
     float **output = (float **)malloc(seqLength * sizeof(float *));
-    for (int i = 0; i < seqLength; i++) {
+    for (int i = 0; i < seqLength; i++)
+    {
         output[i] = (float *)malloc(depth * sizeof(float));
     }
 
-    // TODO: Implement the attention computation
-    for (int i = 0; i < seqLength; i++) {
-        for (int j = 0; j < depth; j++) {
-            float sum = 0.0f;
-            for (int k = 0; k < seqLength; k++) {
-                sum += Q[i][k] * K[k][j];
+    float scale = sqrtf((float)depth);
+    for (int i = 0; i < seqLength; i++)
+    {
+        float maxScore = -INFINITY;
+        float scores[seqLength];
+        for (int k = 0; k < seqLength; k++)
+        {
+            scores[k] = 0.0f;
+            for (int d = 0; d < depth; d++)
+            {
+                scores[k] += Q[i][d] * K[k][d];
             }
-            output[i][j] = sum / sqrt((float)depth);
+            scores[k] /= scale;
+            if (scores[k] > maxScore)
+            {
+                maxScore = scores[k];
+            }
+        }
+
+        float weightSum = 0.0f;
+        for (int k = 0; k < seqLength; k++)
+        {
+            scores[k] = expf(scores[k] - maxScore);
+            weightSum += scores[k];
+        }
+
+        for (int d = 0; d < depth; d++)
+        {
+            output[i][d] = 0.0f;
+            for (int k = 0; k < seqLength; k++)
+            {
+                output[i][d] += (scores[k] / weightSum) * V[k][d];
+            }
         }
     }
 

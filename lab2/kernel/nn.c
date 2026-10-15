@@ -2,23 +2,21 @@
 
 float *flatten(float ***input, int inputSize, int depth)
 {
-}
+    int flattenedSize = inputSize * inputSize * depth;
+    float *flattened = (float *)malloc(flattenedSize * sizeof(float));
+    int index = 0;
+    for (int d = 0; d < depth; d++)
     {
-        int flattenedSize = inputSize * inputSize * depth;
-        float *flattened = (float *)malloc(flattenedSize * sizeof(float));
-        int index = 0;
-        for (int d = 0; d < depth; d++)
+        for (int i = 0; i < inputSize; i++)
         {
-            for (int i = 0; i < inputSize; i++)
+            for (int j = 0; j < inputSize; j++)
             {
-                for (int j = 0; j < inputSize; j++)
-                {
-                    flattened[index++] = input[d][i][j];
-                }
+                flattened[index++] = input[d][i][j];
             }
         }
-        return flattened;
     }
+    return flattened;
+}
 
 void destroyConvOutput(float ***convOutput, int convOutputSize)
 {
@@ -50,17 +48,15 @@ int forwardPass(float ***image, int numChannels, float ****conv1WeightsData, flo
 
 int predict(float *probabilityVector, int numClasses)
 {
-}
+    int predictedClass = 0;
+    float maxProbability = probabilityVector[0];
+    for (int i = 1; i < numClasses; i++)
     {
-        int predictedClass = 0;
-        float maxProbability = probabilityVector[0];
-        for (int i = 1; i < numClasses; i++)
+        if (probabilityVector[i] > maxProbability)
         {
-            if (probabilityVector[i] > maxProbability)
-            {
-                maxProbability = probabilityVector[i];
-                predictedClass = i;
-            }
+            maxProbability = probabilityVector[i];
+            predictedClass = i;
         }
-        return predictedClass;
     }
+    return predictedClass;
+}

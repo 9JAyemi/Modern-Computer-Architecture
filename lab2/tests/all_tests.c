@@ -38,8 +38,11 @@ int main(void) {
     // Test matrix_ops
     RUN_TEST(test_matmul_square_matrices);
     RUN_TEST(test_matmul_incompatible_dimensions);
+    RUN_TEST(test_matmul_blocking_matches_naive);
     RUN_TEST(test_matmul_quant);
+    RUN_TEST(test_matmul_quant_byte_order);
     RUN_TEST(test_scaled_dot_product_attention);
+    RUN_TEST(test_attention_uniform_weights);
 
     return UNITY_END();
 }

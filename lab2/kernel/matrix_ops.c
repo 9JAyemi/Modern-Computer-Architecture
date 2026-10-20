@@ -1,18 +1,26 @@
 #include "matrix_ops.h"
 #include <stdint.h>
 
+// Tile sizes for matmul_blocking. They can be overridden at compile time
+// (e.g. -DBLOCK_SIZE_I=64) so different tilings can be profiled without
+// editing this file. The defaults were the fastest configuration measured on
+// the ece5755 node (Xeon Silver 4514Y: 48 KB L1d, 2 MB L2 per core).
 #ifndef BLOCK_SIZE_I
-#define BLOCK_SIZE_I 169
+#define BLOCK_SIZE_I 64
 #endif
 
 #ifndef BLOCK_SIZE_J
-#define BLOCK_SIZE_J 32
+#define BLOCK_SIZE_J 256
 #endif
 
 #ifndef BLOCK_SIZE_K
-#define BLOCK_SIZE_K 9
+#define BLOCK_SIZE_K 32
 #endif
 
+static inline int min_int(int a, int b)
+{
+    return a < b ? a : b;
+}
 
 float **matmul(float **A, float **B, int A_rows, int A_cols, int B_rows, int B_cols) 
 {
@@ -41,46 +49,53 @@ float **matmul(float **A, float **B, int A_rows, int A_cols, int B_rows, int B_c
 }
 
 // Matmul with blocking optimization
+//
+// C = A * B computed tile by tile. The three outer loops walk over tiles of
+// size BLOCK_SIZE_I x BLOCK_SIZE_K (A), BLOCK_SIZE_K x BLOCK_SIZE_J (B) and
+// BLOCK_SIZE_I x BLOCK_SIZE_J (C). Inside a tile the loops run in i-k-j order:
+//   - A[i][k] is loaded once and kept in a register,
+//   - B[k][j..] and C[i][j..] are read/written with unit stride, so every
+//     cache line brought in is fully used.
+// The B tile (BLOCK_SIZE_K x BLOCK_SIZE_J floats) is reused by all
+// BLOCK_SIZE_I rows of the A tile while it is still resident in L1/L2,
+// instead of being streamed from memory once per output row as in matmul().
 float **matmul_blocking(float **A, float **B, int A_rows, int A_cols, int B_rows, int B_cols)
 {
-    // TODO: Implement matrix multiplication with blocking (loop tiling)
     if (A_cols != B_rows) {
         return NULL; // Incompatible matrix dimensions
     }
 
-    // Allocate memory for the result matrix
+    // Allocate the result matrix and zero it: tiles along k accumulate into C
     float **C = (float **)malloc(A_rows * sizeof(float *));
     for (int i = 0; i < A_rows; i++) {
-        C[i] = (float *)malloc(B_cols * sizeof(float));
-        for (int j = 0; j < B_cols; j++) {
-            C[i][j] = 0.0f;
-        }
+        C[i] = (float *)calloc(B_cols, sizeof(float));
     }
 
-    for (int i = 0; i < A_rows; i += BLOCK_SIZE_I)
-    {
-        for (int j = 0; j < B_cols; j += BLOCK_SIZE_J)
-        {
-            for (int k = 0; k < A_cols; k += BLOCK_SIZE_K)
-            {
-                // TODO: Implement the block multiplication
-                for (int ii = i; ii < i + BLOCK_SIZE_I && ii < A_rows; ++ii)
-                {
-                    for (int jj = j; jj < j + BLOCK_SIZE_J && jj < B_cols; ++jj)
-                    {
-                        float sum = 0.0f;
-                        for (int kk = k; kk < k + BLOCK_SIZE_K && kk < A_cols; ++kk)
-                        {
-                            sum += A[ii][kk] * B[kk][jj];
+    for (int i0 = 0; i0 < A_rows; i0 += BLOCK_SIZE_I) {
+        int i_end = min_int(i0 + BLOCK_SIZE_I, A_rows);
+
+        for (int k0 = 0; k0 < A_cols; k0 += BLOCK_SIZE_K) {
+            int k_end = min_int(k0 + BLOCK_SIZE_K, A_cols);
+
+            for (int j0 = 0; j0 < B_cols; j0 += BLOCK_SIZE_J) {
+                int j_end = min_int(j0 + BLOCK_SIZE_J, B_cols);
+
+                // Multiply tile A[i0:i_end][k0:k_end] by tile
+                // B[k0:k_end][j0:j_end] and accumulate into C[i0:i_end][j0:j_end]
+                for (int i = i0; i < i_end; i++) {
+                    float *C_row = C[i];
+                    for (int k = k0; k < k_end; k++) {
+                        float a = A[i][k];
+                        float *B_row = B[k];
+                        for (int j = j0; j < j_end; j++) {
+                            C_row[j] += a * B_row[j];
                         }
-                        // Accumulate the result into the output matrix
-                        // Assuming C is the output matrix, you need to allocate it before this loop
-                        C[ii][jj] += sum;
                     }
                 }
             }
         }
     }
+
     return C;
 }
 
@@ -150,18 +165,24 @@ float **matmul_quant(unsigned int **A, int **B, int A_rows, int A_cols, int B_ro
         }
     }
 
+    // Each word A[i][w] packs elements_per_uint quantized values, most
+    // significant byte first: A[i][0] = 0x01020304 holds [1, 2, 3, 4], which
+    // multiply B rows 0, 1, 2, 3. Value e of a word is therefore at bit offset
+    // (elements_per_uint - 1 - e) * QUANT_PRECISION and is extracted with a
+    // shift followed by a mask.
     for (int i = 0; i < A_rows; ++i)
     {
         for (int j = 0; j < B_cols; ++j)
         {
-            int64_t sum = 0;
+            int64_t sum = 0; // integer accumulation, converted to float once
             for (int word = 0; word < A_cols; ++word)
             {
+                unsigned int packed = A[i][word];
                 for (int element = 0; element < elements_per_uint; ++element)
                 {
                     int k = word * elements_per_uint + element;
-                    unsigned int shift = (unsigned int)(element * QUANT_PRECISION);
-                    unsigned int quantized_value = (A[i][word] >> shift) & mask;
+                    unsigned int shift = (unsigned int)((elements_per_uint - 1 - element) * QUANT_PRECISION);
+                    unsigned int quantized_value = (packed >> shift) & mask;
                     sum += (int64_t)quantized_value * (int64_t)B[k][j];
                 }
             }

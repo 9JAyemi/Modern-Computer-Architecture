@@ -2,7 +2,8 @@
 #include <stdio.h>
 #include <math.h>
 
-// Scaled dot-product attention
+// Scaled dot-product attention: softmax(Q K^T / sqrt(depth)) V
+// Q, K, V are seqLength x depth; the output is seqLength x depth.
 float **scaled_dot_product_attention(float **Q, float **K, float **V, int seqLength, int depth)
 {
     float **output = (float **)malloc(seqLength * sizeof(float *));
@@ -12,10 +13,14 @@ float **scaled_dot_product_attention(float **Q, float **K, float **V, int seqLen
     }
 
     float scale = sqrtf((float)depth);
+    // One row of attention scores, reused for every query row. Heap-allocated
+    // so long sequences cannot overflow the stack.
+    float *scores = (float *)malloc(seqLength * sizeof(float));
     for (int i = 0; i < seqLength; i++)
     {
+        // scores[k] = (Q[i] . K[k]) / sqrt(depth), tracking the max for a
+        // numerically stable softmax
         float maxScore = -INFINITY;
-        float scores[seqLength];
         for (int k = 0; k < seqLength; k++)
         {
             scores[k] = 0.0f;
@@ -30,6 +35,7 @@ float **scaled_dot_product_attention(float **Q, float **K, float **V, int seqLen
             }
         }
 
+        // Softmax over the scores of row i
         float weightSum = 0.0f;
         for (int k = 0; k < seqLength; k++)
         {
@@ -37,6 +43,7 @@ float **scaled_dot_product_attention(float **Q, float **K, float **V, int seqLen
             weightSum += scores[k];
         }
 
+        // output[i] = sum_k softmax(scores)[k] * V[k]
         for (int d = 0; d < depth; d++)
         {
             output[i][d] = 0.0f;
@@ -47,5 +54,6 @@ float **scaled_dot_product_attention(float **Q, float **K, float **V, int seqLen
         }
     }
 
+    free(scores);
     return output;
 }

@@ -1,0 +1,22 @@
+Consider disabling nmi watchdog to minimize multiplexing
+(echo 0 | sudo tee /proc/sys/kernel/nmi_watchdog or
+ echo kernel.nmi_watchdog=0 >> /etc/sysctl.conf ; sysctl -p as root)
+Performing blocking multiplication...
+Blocking multiplications completed.
+# 4.8-full-perf on INTEL(R) XEON(R) SILVER 4514Y [spr/sapphire_rapids]
+FE               Frontend_Bound                      % Slots                        0.4  <
+BAD              Bad_Speculation                     % Slots                        0.8  <
+BE               Backend_Bound                       % Slots                       10.6  <
+RET              Retiring                            % Slots                       88.2   
+FE               Frontend_Bound.Fetch_Latency        % Slots                       -0.0  <
+FE               Frontend_Bound.Fetch_Bandwidth      % Slots                        0.4  <
+BAD              Bad_Speculation.Branch_Mispredicts  % Slots                        0.8  <
+BAD              Bad_Speculation.Machine_Clears      % Slots                        0.0  <
+BE/Mem           Backend_Bound.Memory_Bound          % Slots                        0.4  <
+BE/Core          Backend_Bound.Core_Bound            % Slots                       10.2  <
+RET              Retiring.Light_Operations           % Slots                       84.3   <==
+RET              Retiring.Heavy_Operations           % Slots                        3.9  <
+MUX                                                  %                            100.00  
+Run toplev --describe Light_Operations^ to get more information on bottleneck
+Add --run-sample to find locations
+Add --nodes '!+Light_Operations*/3,+MUX' for breakdown.

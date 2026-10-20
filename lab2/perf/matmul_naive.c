@@ -21,9 +21,14 @@ void free_matrix(float **matrix, int rows) {
     free(matrix);
 }
 
-int main() {
+// Usage: ./matmul_naive [size] [reps]
+// Multiplies two random size x size matrices reps times so that the runtime
+// of the program is dominated by the function under test.
+int main(int argc, char *argv[]) {
     srand(time(NULL));
-    int A_rows = 1300, A_cols = 1300, B_rows = 1300, B_cols = 1300;
+    int size = argc > 1 ? atoi(argv[1]) : 1300;
+    int reps = argc > 2 ? atoi(argv[2]) : 5;
+    int A_rows = size, A_cols = size, B_rows = size, B_cols = size;
 
     if (A_cols != B_rows) {
         printf("Matrix dimensions incompatible for multiplication.\n");
@@ -35,8 +40,11 @@ int main() {
     float **C;
 
     printf("Performing naive multiplication...\n");
-    for (int i=0; i<5; i++) {
+    for (int i=0; i<reps; i++) {
         C = matmul(A, B, A_rows, A_cols, B_rows, B_cols);
+        if (i < reps - 1) {
+            free_matrix(C, A_rows); // only keep the last result
+        }
     }
 
     // Cleanup

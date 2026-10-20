@@ -11,7 +11,12 @@ TEST_FILES = ./tests/all_tests.c ./tests/test_attention.c ./tests/test_conv.c ./
 TEST_EXECUTABLES = $(patsubst %.c,%,$(TEST_FILES))
 
 # Performance
-MATMUL_TARGETS = matmul_naive matmul_blocking
+MATMUL_TARGETS = matmul_naive matmul_blocking matmul_blocking_ijk
+SIZE ?= 1024
+REPS ?= 3
+LEVEL ?= 1
+# Tile sizes for matmul_blocking, e.g. make matmul_blocking BI=64 BJ=256 BK=32
+BLOCK_FLAGS = $(if $(BI),-DBLOCK_SIZE_I=$(BI)) $(if $(BJ),-DBLOCK_SIZE_J=$(BJ)) $(if $(BK),-DBLOCK_SIZE_K=$(BK))
 
 BINS = lab2
 
@@ -32,8 +37,10 @@ all_tests:
 
 .PHONY : $(MATMUL_TARGETS)
 $(MATMUL_TARGETS):
-	$(CC) -o $@ ./perf/$@.c $(COMMON_SRC) $(CFLAGS) $(HDF5_FLAGS)
-	python3 /classes/ece5755/pmu-tools/toplev.py --core S0-C0 -l1 -v --force-cpu spr ./$@
+	$(CC) -o $@ ./perf/$@.c $(COMMON_SRC) $(CFLAGS) $(BLOCK_FLAGS) $(HDF5_FLAGS)
+	# Pin the program to CPU 0 (= socket 0, core 0 on the ece5755 node, no SMT)
+	# and collect Top-down counters for that core only
+	python3 /classes/ece5755/pmu-tools/toplev.py --core S0-C0 -l$(LEVEL) -v --no-desc --force-cpu spr taskset -c 0 ./$@ $(SIZE) $(REPS)
 
 .PHONY: clean
 clean:

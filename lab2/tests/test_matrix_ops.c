@@ -51,7 +51,7 @@ void test_matmul_square_matrices(void)
     expected[1][1] = 8.0f;
 
     // Run function under test
-    float **C = matmul(A, B, 2, 2, 2, 2);
+    float **C = matmul_blocking(A, B, 2, 2, 2, 2);
 
     // Check expectations
     assert_float_array_equal_matmul(expected, C, 2, 2);
@@ -86,7 +86,7 @@ void test_matmul_incompatible_dimensions(void)
     }
 
     // Run function under test
-    float **C = matmul(A, B, 2, 3, 2, 2);
+    float **C = matmul_blocking(A, B, 2, 3, 2, 2);
 
     // Check expectations
     UNITY_TEST_ASSERT_NULL(C, __LINE__, "Expected NULL!");
@@ -146,6 +146,112 @@ void test_matmul_quant(void)
     assert_float_array_equal_matmul(expected, C, A_rows, B_cols);
 
     // Cleanup
+    for (int i = 0; i < A_rows; i++)
+    {
+        free(A[i]);
+        free(C[i]);
+        free(expected[i]);
+    }
+    for (int i = 0; i < B_rows; i++)
+    {
+        free(B[i]);
+    }
+    free(A);
+    free(B);
+    free(C);
+    free(expected);
+}
+
+// Compares matmul_blocking against the reference matmul on a non-square
+// problem whose dimensions are not multiples of any tile size, so partial
+// tiles at every edge are exercised.
+void test_matmul_blocking_matches_naive(void)
+{
+    int A_rows = 131, A_cols = 77, B_rows = 77, B_cols = 301;
+
+    float **A = (float **)malloc(A_rows * sizeof(float *));
+    for (int i = 0; i < A_rows; i++)
+    {
+        A[i] = (float *)malloc(A_cols * sizeof(float));
+        for (int j = 0; j < A_cols; j++)
+        {
+            A[i][j] = (float)((i * 7 + j * 3) % 11) - 5.0f;
+        }
+    }
+    float **B = (float **)malloc(B_rows * sizeof(float *));
+    for (int i = 0; i < B_rows; i++)
+    {
+        B[i] = (float *)malloc(B_cols * sizeof(float));
+        for (int j = 0; j < B_cols; j++)
+        {
+            B[i][j] = (float)((i * 5 + j) % 13) * 0.25f - 1.5f;
+        }
+    }
+
+    float **expected = matmul(A, B, A_rows, A_cols, B_rows, B_cols);
+    float **C = matmul_blocking(A, B, A_rows, A_cols, B_rows, B_cols);
+
+    // Inputs are small multiples of 0.25, so every partial sum is exact in
+    // float and both summation orders give identical results.
+    assert_float_array_equal_matmul(expected, C, A_rows, B_cols);
+
+    for (int i = 0; i < A_rows; i++)
+    {
+        free(A[i]);
+        free(C[i]);
+        free(expected[i]);
+    }
+    for (int i = 0; i < B_rows; i++)
+    {
+        free(B[i]);
+    }
+    free(A);
+    free(B);
+    free(C);
+    free(expected);
+}
+
+// Example from the handout: A[0][0] = 0x01020304 holds [1, 2, 3, 4] (most
+// significant byte first), so C[0][0] = 1*a + 2*b + 3*c + 4*d.
+void test_matmul_quant_byte_order(void)
+{
+    int A_rows = 2, A_cols = 1, B_rows = 4, B_cols = 2;
+
+    unsigned int **A = (unsigned int **)malloc(A_rows * sizeof(unsigned int *));
+    for (int i = 0; i < A_rows; i++)
+    {
+        A[i] = (unsigned int *)malloc(A_cols * sizeof(unsigned int));
+    }
+    A[0][0] = 0x01020304;
+    A[1][0] = 0xFF00800A; // [255, 0, 128, 10]
+
+    int B_data[4][2] = {{10, -1}, {100, 2}, {1000, -3}, {10000, 4}};
+    int **B = (int **)malloc(B_rows * sizeof(int *));
+    for (int i = 0; i < B_rows; i++)
+    {
+        B[i] = (int *)malloc(B_cols * sizeof(int));
+        for (int j = 0; j < B_cols; j++)
+        {
+            B[i][j] = B_data[i][j];
+        }
+    }
+
+    float expected_data[2][2] = {
+        {1 * 10 + 2 * 100 + 3 * 1000 + 4 * 10000, 1 * -1 + 2 * 2 + 3 * -3 + 4 * 4},
+        {255 * 10 + 0 * 100 + 128 * 1000 + 10 * 10000, 255 * -1 + 0 * 2 + 128 * -3 + 10 * 4}};
+    float **expected = (float **)malloc(A_rows * sizeof(float *));
+    for (int i = 0; i < A_rows; i++)
+    {
+        expected[i] = (float *)malloc(B_cols * sizeof(float));
+        for (int j = 0; j < B_cols; j++)
+        {
+            expected[i][j] = expected_data[i][j];
+        }
+    }
+
+    float **C = matmul_quant(A, B, A_rows, A_cols, B_rows, B_cols);
+    assert_float_array_equal_matmul(expected, C, A_rows, B_cols);
+
     for (int i = 0; i < A_rows; i++)
     {
         free(A[i]);

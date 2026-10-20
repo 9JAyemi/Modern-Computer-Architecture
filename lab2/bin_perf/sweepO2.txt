@@ -1,0 +1,251 @@
+naive O2 1024 1.43
+naive O2 2048 13.99
+./utils/data_utils.c: In function ‘loadImages’:
+./utils/data_utils.c:80:21: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   80 |                     fread(&pixel, 1, 1, file);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~
+./utils/data_utils.c: In function ‘loadLabels’:
+./utils/data_utils.c:125:9: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  125 |         fread(&label, 1, 1, file);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+-O2 1024 16 64 16 0.83
+./utils/data_utils.c: In function ‘loadImages’:
+./utils/data_utils.c:80:21: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   80 |                     fread(&pixel, 1, 1, file);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~
+./utils/data_utils.c: In function ‘loadLabels’:
+./utils/data_utils.c:125:9: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  125 |         fread(&label, 1, 1, file);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+-O2 1024 16 64 64 0.84
+./utils/data_utils.c: In function ‘loadImages’:
+./utils/data_utils.c:80:21: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   80 |                     fread(&pixel, 1, 1, file);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~
+./utils/data_utils.c: In function ‘loadLabels’:
+./utils/data_utils.c:125:9: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  125 |         fread(&label, 1, 1, file);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+-O2 1024 16 64 256 0.75
+./utils/data_utils.c: In function ‘loadImages’:
+./utils/data_utils.c:80:21: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   80 |                     fread(&pixel, 1, 1, file);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~
+./utils/data_utils.c: In function ‘loadLabels’:
+./utils/data_utils.c:125:9: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  125 |         fread(&label, 1, 1, file);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+-O2 1024 16 256 16 0.71
+./utils/data_utils.c: In function ‘loadImages’:
+./utils/data_utils.c:80:21: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   80 |                     fread(&pixel, 1, 1, file);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~
+./utils/data_utils.c: In function ‘loadLabels’:
+./utils/data_utils.c:125:9: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  125 |         fread(&label, 1, 1, file);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+-O2 1024 16 256 64 0.71
+./utils/data_utils.c: In function ‘loadImages’:
+./utils/data_utils.c:80:21: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   80 |                     fread(&pixel, 1, 1, file);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~
+./utils/data_utils.c: In function ‘loadLabels’:
+./utils/data_utils.c:125:9: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  125 |         fread(&label, 1, 1, file);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+-O2 1024 16 256 256 0.72
+./utils/data_utils.c: In function ‘loadImages’:
+./utils/data_utils.c:80:21: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   80 |                     fread(&pixel, 1, 1, file);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~
+./utils/data_utils.c: In function ‘loadLabels’:
+./utils/data_utils.c:125:9: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  125 |         fread(&label, 1, 1, file);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+-O2 1024 16 1024 16 0.67
+./utils/data_utils.c: In function ‘loadImages’:
+./utils/data_utils.c:80:21: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   80 |                     fread(&pixel, 1, 1, file);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~
+./utils/data_utils.c: In function ‘loadLabels’:
+./utils/data_utils.c:125:9: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  125 |         fread(&label, 1, 1, file);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+-O2 1024 16 1024 64 0.68
+./utils/data_utils.c: In function ‘loadImages’:
+./utils/data_utils.c:80:21: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   80 |                     fread(&pixel, 1, 1, file);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~
+./utils/data_utils.c: In function ‘loadLabels’:
+./utils/data_utils.c:125:9: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  125 |         fread(&label, 1, 1, file);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+-O2 1024 16 1024 256 0.68
+./utils/data_utils.c: In function ‘loadImages’:
+./utils/data_utils.c:80:21: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   80 |                     fread(&pixel, 1, 1, file);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~
+./utils/data_utils.c: In function ‘loadLabels’:
+./utils/data_utils.c:125:9: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  125 |         fread(&label, 1, 1, file);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+-O2 1024 64 64 16 0.84
+./utils/data_utils.c: In function ‘loadImages’:
+./utils/data_utils.c:80:21: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   80 |                     fread(&pixel, 1, 1, file);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~
+./utils/data_utils.c: In function ‘loadLabels’:
+./utils/data_utils.c:125:9: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  125 |         fread(&label, 1, 1, file);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+-O2 1024 64 64 64 0.86
+./utils/data_utils.c: In function ‘loadImages’:
+./utils/data_utils.c:80:21: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   80 |                     fread(&pixel, 1, 1, file);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~
+./utils/data_utils.c: In function ‘loadLabels’:
+./utils/data_utils.c:125:9: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  125 |         fread(&label, 1, 1, file);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+-O2 1024 64 64 256 0.72
+./utils/data_utils.c: In function ‘loadImages’:
+./utils/data_utils.c:80:21: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   80 |                     fread(&pixel, 1, 1, file);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~
+./utils/data_utils.c: In function ‘loadLabels’:
+./utils/data_utils.c:125:9: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  125 |         fread(&label, 1, 1, file);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+-O2 1024 64 256 16 0.69
+./utils/data_utils.c: In function ‘loadImages’:
+./utils/data_utils.c:80:21: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   80 |                     fread(&pixel, 1, 1, file);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~
+./utils/data_utils.c: In function ‘loadLabels’:
+./utils/data_utils.c:125:9: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  125 |         fread(&label, 1, 1, file);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+-O2 1024 64 256 64 0.67
+./utils/data_utils.c: In function ‘loadImages’:
+./utils/data_utils.c:80:21: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   80 |                     fread(&pixel, 1, 1, file);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~
+./utils/data_utils.c: In function ‘loadLabels’:
+./utils/data_utils.c:125:9: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  125 |         fread(&label, 1, 1, file);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+-O2 1024 64 256 256 0.68
+./utils/data_utils.c: In function ‘loadImages’:
+./utils/data_utils.c:80:21: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   80 |                     fread(&pixel, 1, 1, file);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~
+./utils/data_utils.c: In function ‘loadLabels’:
+./utils/data_utils.c:125:9: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  125 |         fread(&label, 1, 1, file);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+-O2 1024 64 1024 16 0.65
+./utils/data_utils.c: In function ‘loadImages’:
+./utils/data_utils.c:80:21: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   80 |                     fread(&pixel, 1, 1, file);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~
+./utils/data_utils.c: In function ‘loadLabels’:
+./utils/data_utils.c:125:9: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  125 |         fread(&label, 1, 1, file);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+-O2 1024 64 1024 64 0.66
+./utils/data_utils.c: In function ‘loadImages’:
+./utils/data_utils.c:80:21: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   80 |                     fread(&pixel, 1, 1, file);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~
+./utils/data_utils.c: In function ‘loadLabels’:
+./utils/data_utils.c:125:9: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  125 |         fread(&label, 1, 1, file);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+-O2 1024 64 1024 256 0.65
+./utils/data_utils.c: In function ‘loadImages’:
+./utils/data_utils.c:80:21: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   80 |                     fread(&pixel, 1, 1, file);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~
+./utils/data_utils.c: In function ‘loadLabels’:
+./utils/data_utils.c:125:9: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  125 |         fread(&label, 1, 1, file);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+-O2 1024 256 64 16 0.73
+./utils/data_utils.c: In function ‘loadImages’:
+./utils/data_utils.c:80:21: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   80 |                     fread(&pixel, 1, 1, file);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~
+./utils/data_utils.c: In function ‘loadLabels’:
+./utils/data_utils.c:125:9: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  125 |         fread(&label, 1, 1, file);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+-O2 1024 256 64 64 0.67
+./utils/data_utils.c: In function ‘loadImages’:
+./utils/data_utils.c:80:21: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   80 |                     fread(&pixel, 1, 1, file);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~
+./utils/data_utils.c: In function ‘loadLabels’:
+./utils/data_utils.c:125:9: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  125 |         fread(&label, 1, 1, file);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+-O2 1024 256 64 256 0.72
+./utils/data_utils.c: In function ‘loadImages’:
+./utils/data_utils.c:80:21: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   80 |                     fread(&pixel, 1, 1, file);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~
+./utils/data_utils.c: In function ‘loadLabels’:
+./utils/data_utils.c:125:9: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  125 |         fread(&label, 1, 1, file);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+-O2 1024 256 256 16 0.67
+./utils/data_utils.c: In function ‘loadImages’:
+./utils/data_utils.c:80:21: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   80 |                     fread(&pixel, 1, 1, file);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~
+./utils/data_utils.c: In function ‘loadLabels’:
+./utils/data_utils.c:125:9: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  125 |         fread(&label, 1, 1, file);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+-O2 1024 256 256 64 0.63
+./utils/data_utils.c: In function ‘loadImages’:
+./utils/data_utils.c:80:21: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   80 |                     fread(&pixel, 1, 1, file);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~
+./utils/data_utils.c: In function ‘loadLabels’:
+./utils/data_utils.c:125:9: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  125 |         fread(&label, 1, 1, file);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+-O2 1024 256 256 256 0.65
+./utils/data_utils.c: In function ‘loadImages’:
+./utils/data_utils.c:80:21: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   80 |                     fread(&pixel, 1, 1, file);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~
+./utils/data_utils.c: In function ‘loadLabels’:
+./utils/data_utils.c:125:9: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  125 |         fread(&label, 1, 1, file);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+-O2 1024 256 1024 16 0.66
+./utils/data_utils.c: In function ‘loadImages’:
+./utils/data_utils.c:80:21: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   80 |                     fread(&pixel, 1, 1, file);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~
+./utils/data_utils.c: In function ‘loadLabels’:
+./utils/data_utils.c:125:9: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  125 |         fread(&label, 1, 1, file);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+-O2 1024 256 1024 64 0.65
+./utils/data_utils.c: In function ‘loadImages’:
+./utils/data_utils.c:80:21: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   80 |                     fread(&pixel, 1, 1, file);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~
+./utils/data_utils.c: In function ‘loadLabels’:
+./utils/data_utils.c:125:9: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  125 |         fread(&label, 1, 1, file);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+-O2 1024 256 1024 256 0.65
+-O2 2048 64 256 16 5.68
+-O2 2048 64 256 64 5.56
+-O2 2048 64 256 256 5.44
+-O2 2048 64 1024 16 6.43
+-O2 2048 64 1024 64 5.29
+-O2 2048 64 1024 256 5.13

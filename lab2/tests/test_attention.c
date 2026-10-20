@@ -68,3 +68,35 @@ void test_scaled_dot_product_attention(void)
     free_matrix(V, seqLength);
     free(output);
 }
+// With Q = 0 every score is equal, so the softmax weights are uniform and each
+// output row is the mean of the rows of V.
+void test_attention_uniform_weights(void)
+{
+    int seqLength = 4;
+    int depth = 2;
+    float **Q = allocate_matrix(seqLength, depth);
+    float **K = allocate_matrix(seqLength, depth);
+    float **V = allocate_matrix(seqLength, depth);
+    for (int i = 0; i < seqLength; i++)
+    {
+        for (int j = 0; j < depth; j++)
+        {
+            Q[i][j] = 0.0f;
+            K[i][j] = (float)(i + j);
+            V[i][j] = (float)(i * depth + j); // column means: 3, 4
+        }
+    }
+
+    float **output = scaled_dot_product_attention(Q, K, V, seqLength, depth);
+
+    for (int i = 0; i < seqLength; i++)
+    {
+        UNITY_TEST_ASSERT_FLOAT_WITHIN(0.0001, 3.0f, output[i][0], __LINE__, "Uniform attention mismatch");
+        UNITY_TEST_ASSERT_FLOAT_WITHIN(0.0001, 4.0f, output[i][1], __LINE__, "Uniform attention mismatch");
+    }
+
+    free_matrix(Q, seqLength);
+    free_matrix(K, seqLength);
+    free_matrix(V, seqLength);
+    free_matrix(output, seqLength);
+}

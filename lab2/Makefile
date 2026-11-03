@@ -7,7 +7,7 @@ COMMON_SRC = ./utils/data_utils.c ./kernel/conv.c ./kernel/functional.c ./kernel
 
 # Unity test framework
 UNITY_FILES = ./tests/unity/unity.c
-TEST_FILES = ./tests/all_tests.c ./tests/test_attention.c ./tests/test_conv.c ./tests/test_functional.c ./tests/test_linear.c ./tests/test_matrix_ops.c
+TEST_FILES = ./tests/all_tests.c ./tests/test_attention.c ./tests/test_conv.c ./tests/test_functional.c ./tests/test_linear.c ./tests/test_matrix_ops.c ./tests/test_nn.c
 TEST_EXECUTABLES = $(patsubst %.c,%,$(TEST_FILES))
 
 # Performance

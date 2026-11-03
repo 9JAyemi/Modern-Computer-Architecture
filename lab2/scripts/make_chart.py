@@ -1,11 +1,14 @@
 """Builds the Top-down bar chart and runtime table for the Lab 2 report.
 
-Reads perf_results/toplev_*.txt and perf_results/time_*.txt (produced by
-scripts/run_perf.sh) and writes report/topdown.pdf and report/runtime_table.tex.
+Reads perf_results/toplev_*_t<trial>.txt and perf_results/time_*_t<trial>.txt
+(produced by scripts/run_perf.sh), averages over all trials, and writes
+report/topdown.pdf, report/runtime_table.tex and report/trial_stats.tex.
 Usage: python3 scripts/make_chart.py
 """
+import glob
 import os
 import re
+import statistics
 
 import matplotlib
 matplotlib.use("Agg")
@@ -35,10 +38,7 @@ SEGMENTS = [
 ]
 
 
-def read_toplev(name, size, opt):
-    path = os.path.join(RES, f"toplev_{name}_size{size}{opt}.txt")
-    if not os.path.exists(path):
-        return None
+def parse_toplev(path):
     vals = {}
     for line in open(path):
         m = re.match(r"^\S+\s+(\S+)\s+% Slots\s+(-?[\d.]+)", line)
@@ -48,24 +48,47 @@ def read_toplev(name, size, opt):
     # leaves sums of ~99-101%)
     seg = [vals.get(k, 0.0) for k, _, _ in SEGMENTS]
     total = sum(seg)
-    return [100 * v / total for v in seg], vals
+    if total == 0:
+        return None  # run failed or still in progress
+    return [100 * v / total for v in seg]
+
+
+def trials(kind, name, size, opt):
+    return sorted(glob.glob(os.path.join(RES, f"{kind}_{name}_size{size}{opt}_t*.txt")))
+
+
+def read_toplev(name, size, opt):
+    """Mean and standard deviation of each segment over all trials."""
+    runs = [r for r in map(parse_toplev, trials("toplev", name, size, opt)) if r]
+    if not runs:
+        return None
+    mean = [statistics.mean(col) for col in zip(*runs)]
+    sd = [statistics.stdev(col) if len(runs) > 1 else 0.0 for col in zip(*runs)]
+    return mean, sd, len(runs)
 
 
 def read_time(name, size, opt):
-    path = os.path.join(RES, f"time_{name}_size{size}{opt}.txt")
-    if not os.path.exists(path):
+    """Mean and standard deviation of wall-clock time over all trials."""
+    ts = []
+    for p in trials("time", name, size, opt):
+        m = re.search(r"real ([\d.]+)", open(p).read())
+        if m:
+            ts.append(float(m.group(1)))
+    if not ts:
         return None
-    m = re.search(r"real ([\d.]+)", open(path).read())
-    return float(m.group(1)) if m else None
+    return statistics.mean(ts), (statistics.stdev(ts) if len(ts) > 1 else 0.0), len(ts)
 
 
 def chart(groups, fname):
     rows = []  # (label, segments) top to bottom, with None as a group gap
+    stats, ntrials = [], []
     for size, opt in groups:
         for name, label in VARIANTS:
             r = read_toplev(name, size, opt)
             if r:
                 rows.append((f"{size}$^2$ {opt}  {label}", r[0]))
+                stats.append(max(r[1]))
+                ntrials.append(r[2])
         rows.append(None)
     rows = rows[:-1]
 
@@ -82,9 +105,6 @@ def chart(groups, fname):
             ax.barh(y, v, left=left, height=0.78, color=color,
                     edgecolor="white", linewidth=1.0)
             left += v
-        # Direct label on the Retiring segment only
-        ax.text(99, y, f"{seg[-1]:.0f}%", va="center", ha="right",
-                fontsize=6.5, color="#0b0b0b")
         yticks.append(y)
         ylabels.append(label)
         y += 1
@@ -106,22 +126,28 @@ def chart(groups, fname):
     fig.tight_layout()
     fig.savefig(os.path.join(OUT, fname))
     fig.savefig(os.path.join(OUT, fname.replace(".pdf", ".png")), dpi=160)
+    # Spread across trials, quoted in the report caption
+    with open(os.path.join(OUT, "trial_stats.tex"), "w") as f:
+        f.write(f"\\newcommand{{\\toplevTrials}}{{{min(ntrials)}}}\n")
+        f.write(f"\\newcommand{{\\toplevMaxSd}}{{{max(stats):.1f}}}\n")
+        f.write(f"\\newcommand{{\\toplevMedSd}}{{{statistics.median(stats):.1f}}}\n")
 
 
 def runtime_table():
     lines = []
     for size in (256, 1024, 2048):
-        base = {opt: read_time("naive", size, opt) for opt in ("-O0", "-O2")}
+        base = {opt: (read_time("naive", size, opt) or [None])[0] for opt in ("-O0", "-O2")}
         for name, label in VARIANTS:
             cells = []
             for opt in ("-O0", "-O2"):
-                t = read_time(name, size, opt)
-                if t is None:
-                    cells += ["--", "--"]
+                r = read_time(name, size, opt)
+                if r is None:
+                    cells += ["--", "--", "--"]
                     continue
+                t, sd, _ = r
                 per = t / REPS[size]
                 sp = base[opt] / t if base[opt] else float("nan")
-                cells += [f"{t:.2f} ({per:.3f})", f"{sp:.2f}$\\times$"]
+                cells += [f"{t:.2f} $\\pm$ {sd:.2f}", f"{per:.3f}", f"{sp:.2f}$\\times$"]
             lines.append(f"{size} & {label} & " + " & ".join(cells) + r" \\")
         lines.append(r"\midrule")
     lines = lines[:-1]

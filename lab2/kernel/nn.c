@@ -2,6 +2,12 @@
 
 float *flatten(float ***input, int inputSize, int depth)
 {
+    // Empty or missing input: nothing to flatten
+    if (input == NULL || inputSize <= 0 || depth <= 0)
+    {
+        return NULL;
+    }
+
     int flattenedSize = inputSize * inputSize * depth;
     float *flattened = (float *)malloc(flattenedSize * sizeof(float));
     int index = 0;

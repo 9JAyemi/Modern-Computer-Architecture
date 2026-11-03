@@ -73,7 +73,7 @@ int main(int argc, char *argv[]) {
 
     float **A = generate_random_matrix(A_rows, A_cols);
     float **B = generate_random_matrix(B_rows, B_cols);
-    float **C;
+    float **C = NULL;
 
     printf("Performing ijk-tiled multiplication...\n");
     for (int i=0; i<reps; i++) {
@@ -86,7 +86,7 @@ int main(int argc, char *argv[]) {
     // Cleanup
     free_matrix(A, A_rows);
     free_matrix(B, B_rows);
-    free_matrix(C, A_rows);
+    if (C) free_matrix(C, A_rows);
 
     printf("Blocking multiplications completed.\n");
 

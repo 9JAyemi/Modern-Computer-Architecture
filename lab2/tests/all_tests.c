@@ -4,6 +4,7 @@
 #include "test_linear.h"
 #include "test_matrix_ops.h"
 #include "test_attention.h"
+#include "test_nn.h"
 
 void setUp(void) {
     /* Code here will run before each test */
@@ -21,10 +22,11 @@ int main(void) {
     RUN_TEST(test_conv_im2col);
 
     // Test nn
-    // RUN_TEST(test_flatten_basic);
-    // RUN_TEST(test_predict_simple_array);
-    // RUN_TEST(test_predict_all_same_values);
-    // RUN_TEST(test_predict_mix_of_negatives_and_positives);
+    RUN_TEST(test_flatten_basic);
+    RUN_TEST(test_flatten_empty);
+    RUN_TEST(test_predict_simple_array);
+    RUN_TEST(test_predict_all_same_values);
+    RUN_TEST(test_predict_mix_of_negatives_and_positives);
 
 
     // Test functional
@@ -34,6 +36,7 @@ int main(void) {
     // Test linear
     RUN_TEST(test_linear_basic);
     RUN_TEST(test_linear_basic2);
+    RUN_TEST(test_linear_empty_input);
 
     // Test matrix_ops
     RUN_TEST(test_matmul_square_matrices);

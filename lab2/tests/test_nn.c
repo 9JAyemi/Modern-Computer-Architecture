@@ -100,3 +100,11 @@ void test_predict_mix_of_negatives_and_positives(void)
 }
 
 // Add more test cases as needed
+
+// Empty input (zero size/depth or NULL) has nothing to flatten
+void test_flatten_empty(void)
+{
+    TEST_ASSERT_NULL(flatten(NULL, 0, 0));
+    TEST_ASSERT_NULL(flatten(NULL, 0, 1));
+    TEST_ASSERT_NULL(flatten(NULL, 2, 0));
+}

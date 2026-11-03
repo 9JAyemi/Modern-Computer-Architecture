@@ -4,6 +4,8 @@
 #   srun -p ece5755 -n 1 --mem=2g --time=00:05:00 ./scripts/run_perf.sh toplev 256 1024
 #   srun -p ece5755 -n 1 --mem=2g --time=00:05:00 ./scripts/run_perf.sh time 256 1024 2048
 # OPT (default -O0, same as the Makefile/Lab 1) selects the optimization level.
+# TRIAL (default 1) numbers the repeated measurement; each trial is a separate
+# run and is saved as *_t<TRIAL>.txt so make_chart.py can average them.
 # Every run is pinned to CPU 0 with taskset and toplev only reports core S0-C0,
 # i.e. exactly the core the program runs on.
 set -u
@@ -11,6 +13,7 @@ cd "$(dirname "$0")/.."
 MODE="$1"; shift
 OPT="${OPT:--O0}"
 LEVEL="${LEVEL:-2}"
+TRIAL="${TRIAL:-1}"
 OUT=perf_results
 BIN="bin_perf/run${OPT}"
 TOPLEV=/classes/ece5755/pmu-tools/toplev.py
@@ -46,7 +49,7 @@ for size in "$@"; do
   reps=$(reps_for "$size")
   for v in "${VARIANTS[@]}"; do
     IFS=: read -r name _ _ <<< "$v"
-    tag="${name}_size${size}${OPT}"
+    tag="${name}_size${size}${OPT}_t${TRIAL}"
     if [ "$MODE" = toplev ]; then
       python3 "$TOPLEV" --core S0-C0 -l"$LEVEL" -v --no-desc --force-cpu spr \
           taskset -c 0 "$BIN/$name" "$size" "$reps" > "$OUT/toplev_${tag}.txt" 2>&1

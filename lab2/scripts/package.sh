@@ -1,10 +1,19 @@
 #!/usr/bin/env bash
-# Builds lab2.zip (code + scripts + raw results) in the parent directory.
+# Builds lab2.zip (code + scripts + report sources + raw results) in the parent directory.
 set -eu
 cd "$(dirname "$0")/../.."
-rm -f lab2.zip
-zip -rq lab2.zip lab2 \
-    -x 'lab2/bin_perf/*' 'lab2/lab2' 'lab2/tests/all_tests' 'lab2/matmul_naive' \
-       'lab2/matmul_blocking' 'lab2/matmul_blocking_ijk' 'lab2/*.pdf' 'lab2/report/*.aux' \
-       'lab2/report/*.log' 'lab2/mnist_data/*' '*/.DS_Store' '*/__pycache__/*'
-unzip -l lab2.zip | tail -1
+python3 - <<'PY'
+import os, zipfile
+skip_dirs = {"bin_perf", "mnist_data", "__pycache__"}
+skip_files = {"lab2", "matmul_naive", "matmul_blocking", "matmul_blocking_ijk",
+              "all_tests", ".DS_Store", "lab2_fall2026.pdf"}
+with zipfile.ZipFile("lab2.zip", "w", zipfile.ZIP_DEFLATED) as z:
+    n = 0
+    for root, dirs, files in os.walk("lab2"):
+        dirs[:] = sorted(d for d in dirs if d not in skip_dirs)
+        for f in sorted(files):
+            if f in skip_files or f.endswith((".aux", ".log", ".xdv")):
+                continue
+            z.write(os.path.join(root, f)); n += 1
+print(f"lab2.zip: {n} files")
+PY

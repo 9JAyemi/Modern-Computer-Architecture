@@ -11,3 +11,34 @@ toplev tiled_ikj_64x256x32_size1024-O2 reps=3 -> perf_results/toplev_tiled_ikj_6
 toplev naive_size2048-O2 reps=1 -> perf_results/toplev_naive_size2048-O2.txt
 toplev tiled_ijk_64x256x32_size2048-O2 reps=1 -> perf_results/toplev_tiled_ijk_64x256x32_size2048-O2.txt
 toplev tiled_ikj_16x64x16_size2048-O2 reps=1 -> perf_results/toplev_tiled_ikj_16x64x16_size2048-O2.txt
+toplev tiled_ikj_64x256x32_size2048-O2 reps=1 -> perf_results/toplev_tiled_ikj_64x256x32_size2048-O2.txt
+srun: job 486666 queued and waiting for resources
+srun: job 486666 has been allocated resources
+time naive_size256-O0 reps=100 real 6.24 user 6.22 sys 0.00
+time tiled_ijk_64x256x32_size256-O0 reps=100 real 4.55 user 4.53 sys 0.00
+time tiled_ikj_16x64x16_size256-O0 reps=100 real 2.99 user 2.98 sys 0.00
+time tiled_ikj_64x256x32_size256-O0 reps=100 real 2.90 user 2.88 sys 0.01
+time naive_size1024-O0 reps=3 real 15.72 user 15.70 sys 0.00
+time tiled_ijk_64x256x32_size1024-O0 reps=3 real 8.92 user 8.90 sys 0.01
+time tiled_ikj_16x64x16_size1024-O0 reps=3 real 5.73 user 5.71 sys 0.01
+time tiled_ikj_64x256x32_size1024-O0 reps=3 real 5.54 user 5.53 sys 0.00
+srun: job 486667 queued and waiting for resources
+srun: job 486667 has been allocated resources
+time naive_size2048-O0 reps=1 real 49.49 user 49.41 sys 0.02
+time tiled_ijk_64x256x32_size2048-O0 reps=1 real 23.94 user 23.90 sys 0.02
+time tiled_ikj_16x64x16_size2048-O0 reps=1 real 15.41 user 15.38 sys 0.01
+time tiled_ikj_64x256x32_size2048-O0 reps=1 real 14.78 user 14.74 sys 0.03
+srun: job 486668 queued and waiting for resources
+srun: job 486668 has been allocated resources
+time naive_size256-O2 reps=100 real 1.19 user 1.18 sys 0.00
+time tiled_ijk_64x256x32_size256-O2 reps=100 real 1.25 user 1.25 sys 0.00
+time tiled_ikj_16x64x16_size256-O2 reps=100 real 1.22 user 1.21 sys 0.00
+time tiled_ikj_64x256x32_size256-O2 reps=100 real 0.96 user 0.95 sys 0.00
+time naive_size1024-O2 reps=3 real 4.19 user 4.18 sys 0.00
+time tiled_ijk_64x256x32_size1024-O2 reps=3 real 2.62 user 2.61 sys 0.00
+time tiled_ikj_16x64x16_size1024-O2 reps=3 real 2.41 user 2.40 sys 0.01
+time tiled_ikj_64x256x32_size1024-O2 reps=3 real 1.92 user 1.91 sys 0.00
+time naive_size2048-O2 reps=1 real 13.86 user 13.82 sys 0.02
+time tiled_ijk_64x256x32_size2048-O2 reps=1 real 7.14 user 7.11 sys 0.02
+time tiled_ikj_16x64x16_size2048-O2 reps=1 real 6.45 user 6.42 sys 0.02
+time tiled_ikj_64x256x32_size2048-O2 reps=1 real 5.18 user 5.15 sys 0.02

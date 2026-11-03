@@ -29,4 +29,15 @@ void test_linear_basic2(void)
     free(output);
 }
 
+// Empty input (size 0 or NULL pointers) has no valid output
+void test_linear_empty_input(void)
+{
+    float input[] = {1.0};
+    float *weights[] = {(float[]){1.0}};
+    float biases[] = {0.0};
+    TEST_ASSERT_NULL(linear(input, weights, biases, 0, 1));
+    TEST_ASSERT_NULL(linear(input, weights, biases, 1, 0));
+    TEST_ASSERT_NULL(linear(NULL, NULL, NULL, 0, 0));
+}
+
 // Add more test cases as needed

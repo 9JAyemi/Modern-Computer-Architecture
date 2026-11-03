@@ -12,6 +12,9 @@
 ## Tests
     make test
 
+19 Unity tests, including edge-tile, quantization byte-order, attention, and empty-input
+tests for `flatten()` and `linear()` (both return `NULL` for empty input).
+
 ## Profiling (must run on the ece5755 node; perf counters are disabled on the login node)
     srun -p ece5755 -n 1 --mem=2g --time=00:05:00 --pty bash
     make matmul_naive SIZE=1024 REPS=3 LEVEL=2
@@ -21,12 +24,16 @@
 Each target pins the program to CPU 0 (`taskset -c 0`) and toplev reports only that core
 (`--core S0-C0`). The program loops over the matmul `REPS` times so it dominates runtime.
 
-Full data collection used for the report:
+Full data collection used for the report (3 trials, each inside srun; t = 1, 2, 3):
 
-    ./scripts/run_perf.sh toplev 256 1024     # inside srun, likewise for 2048
-    ./scripts/run_perf.sh time 256 1024 2048
-    OPT=-O2 ./scripts/run_perf.sh time 256 1024 2048
+    TRIAL=t ./scripts/run_perf.sh toplev 256 1024
+    TRIAL=t ./scripts/run_perf.sh toplev 2048
+    TRIAL=t OPT=-O2 ./scripts/run_perf.sh toplev 1024 2048
+    TRIAL=t ./scripts/run_perf.sh time 256 1024 2048
+    TRIAL=t OPT=-O2 ./scripts/run_perf.sh time 256 1024 2048
     ./scripts/sweep_tiles.sh 1024              # tile-size sweep
-    python3 scripts/make_chart.py              # chart + runtime table
+    python3 scripts/make_chart.py              # chart + runtime table (mean/std over trials)
 
-Raw results are in `perf_results/`.
+Raw results are in `perf_results/` (`*_t<trial>.txt`). `perf_results/old_layout_O2/` holds an
+earlier -O2 run whose binary had a different code layout (see report, Section 5); it is not
+used in the report.

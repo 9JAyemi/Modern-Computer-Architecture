@@ -1,0 +1,13 @@
+toplev naive_size2048-O0 reps=1 -> perf_results/toplev_naive_size2048-O0.txt
+toplev tiled_ijk_64x256x32_size2048-O0 reps=1 -> perf_results/toplev_tiled_ijk_64x256x32_size2048-O0.txt
+toplev tiled_ikj_16x64x16_size2048-O0 reps=1 -> perf_results/toplev_tiled_ikj_16x64x16_size2048-O0.txt
+toplev tiled_ikj_64x256x32_size2048-O0 reps=1 -> perf_results/toplev_tiled_ikj_64x256x32_size2048-O0.txt
+srun: job 486665 queued and waiting for resources
+srun: job 486665 has been allocated resources
+toplev naive_size1024-O2 reps=3 -> perf_results/toplev_naive_size1024-O2.txt
+toplev tiled_ijk_64x256x32_size1024-O2 reps=3 -> perf_results/toplev_tiled_ijk_64x256x32_size1024-O2.txt
+toplev tiled_ikj_16x64x16_size1024-O2 reps=3 -> perf_results/toplev_tiled_ikj_16x64x16_size1024-O2.txt
+toplev tiled_ikj_64x256x32_size1024-O2 reps=3 -> perf_results/toplev_tiled_ikj_64x256x32_size1024-O2.txt
+toplev naive_size2048-O2 reps=1 -> perf_results/toplev_naive_size2048-O2.txt
+toplev tiled_ijk_64x256x32_size2048-O2 reps=1 -> perf_results/toplev_tiled_ijk_64x256x32_size2048-O2.txt
+toplev tiled_ikj_16x64x16_size2048-O2 reps=1 -> perf_results/toplev_tiled_ikj_16x64x16_size2048-O2.txt

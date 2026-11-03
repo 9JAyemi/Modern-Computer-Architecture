@@ -1,0 +1,3 @@
+Consider disabling nmi watchdog to minimize multiplexing
+(echo 0 | sudo tee /proc/sys/kernel/nmi_watchdog or
+ echo kernel.nmi_watchdog=0 >> /etc/sysctl.conf ; sysctl -p as root)
